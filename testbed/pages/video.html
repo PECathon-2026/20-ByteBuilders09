@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MeetSecure - Video Conference</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
+    .tile { background: #1e293b; border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 16/9; border: 1px solid #334155; }
+    .avatar-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #334155; }
+    .face-svg { width: 130px; height: 130px; border-radius: 50%; }
+    .name-tag { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 500; }
+    .toolbar { max-width: 900px; margin: 24px auto 0; display: flex; justify-content: center; gap: 16px; }
+    .btn-action { padding: 12px 24px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; transition: transform 0.1s; }
+    .btn-action:hover { transform: scale(1.05); }
+    .btn-mute { background: #475569; color: white; }
+    .btn-cam { background: #475569; color: white; }
+    .btn-leave { background: #ef4444; color: white; }
+  </style>
+</head>
+<body>
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2>Board Executive Strategy Call (Confidential)</h2>
+    <span style="color: #94a3b8; font-size: 13px;">Meeting ID: 940-238-119 • Host: Vikramaditya Roy</span>
+  </div>
+
+  <div class="grid">
+    <!-- Participant 1 -->
+    <div class="tile" id="tile-vikram">
+      <div class="avatar-wrapper">
+        <!-- SVG Face Portrait with skin, eyes, mouth for face detection testing -->
+        <svg class="face-svg" viewBox="0 0 100 100" id="face-vikram">
+          <circle cx="50" cy="50" r="45" fill="#fcd34d" />
+          <circle cx="35" cy="40" r="6" fill="#1e293b" />
+          <circle cx="65" cy="40" r="6" fill="#1e293b" />
+          <path d="M 35 68 Q 50 82 65 68" stroke="#1e293b" stroke-width="4" fill="none" />
+        </svg>
+      </div>
+      <div class="name-tag" id="tag-vikram">Vikramaditya Roy (CEO)</div>
+    </div>
+
+    <!-- Participant 2 -->
+    <div class="tile" id="tile-ananya">
+      <div class="avatar-wrapper">
+        <svg class="face-svg" viewBox="0 0 100 100" id="face-ananya">
+          <circle cx="50" cy="50" r="45" fill="#fbcfe8" />
+          <circle cx="35" cy="42" r="5" fill="#831843" />
+          <circle cx="65" cy="42" r="5" fill="#831843" />
+          <path d="M 38 70 Q 50 80 62 70" stroke="#831843" stroke-width="3" fill="none" />
+        </svg>
+      </div>
+      <div class="name-tag" id="tag-ananya">Ananya Deshmukh (CFO)</div>
+    </div>
+  </div>
+
+  <!-- Interactive Controls that MUST remain intact for the AI agent -->
+  <div class="toolbar">
+    <button class="btn-action btn-mute" id="btn-toggle-mic">Mute Microphone</button>
+    <button class="btn-action btn-cam" id="btn-toggle-cam">Stop Video</button>
+    <button class="btn-action btn-leave" id="btn-leave-call">Leave Meeting</button>
+  </div>
+</body>
+</html>

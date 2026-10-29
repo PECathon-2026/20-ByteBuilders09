@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Zomato/Swiggy Style Support - Live Customer Resolution</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #111827; color: #f9fafb; margin: 0; padding: 24px; }
+    .chat-app { max-width: 700px; margin: 0 auto; background: #1f2937; border-radius: 12px; border: 1px solid #374151; overflow: hidden; }
+    .header { background: #111827; padding: 16px 20px; border-bottom: 1px solid #374151; display: flex; justify-content: space-between; align-items: center; }
+    .chat-window { padding: 20px; height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; background: #182234; }
+    .msg { max-width: 75%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+    .msg-agent { align-self: flex-start; background: #374151; color: #f3f4f6; }
+    .msg-user { align-self: flex-end; background: #2563eb; color: #fff; }
+    .meta { font-size: 11px; color: #9ca3af; margin-top: 4px; text-align: right; }
+    .footer { padding: 14px 20px; background: #111827; border-top: 1px solid #374151; display: flex; gap: 10px; }
+    .footer input { flex: 1; padding: 10px 14px; background: #1f2937; border: 1px solid #374151; border-radius: 6px; color: #fff; font-size: 14px; }
+    .footer button { background: #2563eb; color: white; border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .badge-info { background: #065f46; color: #a7f3d0; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="chat-app">
+    <div class="header">
+      <div>
+        <h3 style="margin: 0; font-size: 16px;">Support Ticket #89211 - Refund Request</h3>
+        <span style="font-size: 12px; color: #9ca3af;">Customer: Rajesh Kulkarni</span>
+      </div>
+      <span class="badge-info">Active Agent</span>
+    </div>
+
+    <div class="chat-window">
+      <div class="msg msg-agent">
+        <div>Hello Rajesh! I see your order #ORD-4491 was marked delayed. Could you confirm your registered mobile number for verification?</div>
+        <div class="meta">10:14 AM</div>
+      </div>
+
+      <div class="msg msg-user" id="user-msg-phone">
+        <div>Yes, my registered phone number is <strong>+91-9876543210</strong>. Please expedite this.</div>
+        <div class="meta">10:15 AM</div>
+      </div>
+
+      <div class="msg msg-agent">
+        <div>Thank you. We have initiated an instant UPI refund of Rs. 650. Can you please specify which UPI VPA you would like the credit sent to?</div>
+        <div class="meta">10:16 AM</div>
+      </div>
+
+      <div class="msg msg-user" id="user-msg-upi">
+        <div>Sure, please send the refund directly to my UPI ID: <strong>rajesh.kulkarni@okaxis</strong> (Account with IFSC: <strong>UTIB0001248</strong>).</div>
+        <div class="meta">10:17 AM</div>
+      </div>
+
+      <div class="msg msg-agent">
+        <div>Refund processed to rajesh.kulkarni@okaxis. Transaction Reference: UTR992104. Is there anything else?</div>
+        <div class="meta">10:18 AM</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <input id="support-reply" type="text" placeholder="Type your response..." />
+      <button id="btn-send-reply">Send Reply</button>
+    </div>
+  </div>
+</body>
+</html>

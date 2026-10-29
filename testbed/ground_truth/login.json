@@ -1,0 +1,24 @@
+{
+  "page": "login.html",
+  "title": "CloudPortal - Two-Factor Authentication",
+  "sensitive_items": [
+    {
+      "type": "EMAIL",
+      "value": "alex.vance@defense-systems.internal",
+      "selector": "#login-email",
+      "channel": "dom_input"
+    },
+    {
+      "type": "PASSWORD",
+      "value": "K9#m$P72xQv!90",
+      "selector": "#login-password",
+      "channel": "dom_input"
+    },
+    {
+      "type": "OTP",
+      "value": "749201",
+      "selector": "#otp-group",
+      "channel": "split_otp"
+    }
+  ]
+}

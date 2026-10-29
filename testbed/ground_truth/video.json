@@ -1,0 +1,35 @@
+{
+  "page": "video.html",
+  "title": "MeetSecure - Video Conference",
+  "sensitive_items": [
+    {
+      "type": "FACE",
+      "value": "face-vikram",
+      "selector": "#face-vikram",
+      "channel": "visual_face"
+    },
+    {
+      "type": "FACE",
+      "value": "face-ananya",
+      "selector": "#face-ananya",
+      "channel": "visual_face"
+    },
+    {
+      "type": "PERSON",
+      "value": "Vikramaditya Roy",
+      "selector": "#tag-vikram",
+      "channel": "dom_text"
+    },
+    {
+      "type": "PERSON",
+      "value": "Ananya Deshmukh",
+      "selector": "#tag-ananya",
+      "channel": "dom_text"
+    }
+  ],
+  "preserved_elements": [
+    "#btn-toggle-mic",
+    "#btn-toggle-cam",
+    "#btn-leave-call"
+  ]
+}

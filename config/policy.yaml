@@ -1,0 +1,109 @@
+# PrivacyLens Policy Configuration
+# Defines redaction, injection, and masking policies for each detected data type.
+
+policies:
+  # Sensitive credentials: AI sees deterministic token [TOKEN_N], executor injects real value locally
+  CARD:
+    mode: inject
+    token_prefix: CARD
+    description: "Credit / Debit card number with Luhn validation"
+    risk_level: critical
+
+  CVV:
+    mode: inject
+    token_prefix: CVV
+    description: "Card CVV / CSC security code"
+    risk_level: critical
+
+  PASSWORD:
+    mode: inject
+    token_prefix: PASSWORD
+    description: "Account or credential password"
+    risk_level: critical
+
+  OTP:
+    mode: inject
+    token_prefix: OTP
+    description: "One-Time Password / 2FA code"
+    risk_level: critical
+
+  AADHAAR:
+    mode: inject
+    token_prefix: AADHAAR
+    description: "Indian 12-digit Aadhaar UID with Verhoeff validation"
+    risk_level: critical
+
+  PAN:
+    mode: inject
+    token_prefix: PAN
+    description: "Indian Permanent Account Number (PAN)"
+    risk_level: high
+
+  # Personal Identifiable Information (PII): Consistent pseudonymization
+  PERSON:
+    mode: pseudonymize
+    token_prefix: PERSON
+    description: "Individual full name or identity"
+    risk_level: medium
+
+  PHONE:
+    mode: pseudonymize
+    token_prefix: PHONE
+    description: "Telephone and mobile numbers"
+    risk_level: medium
+
+  EMAIL:
+    mode: pseudonymize
+    token_prefix: EMAIL
+    description: "Email addresses"
+    risk_level: medium
+
+  ADDRESS:
+    mode: pseudonymize
+    token_prefix: ADDRESS
+    description: "Physical street and delivery address"
+    risk_level: medium
+
+  UPI:
+    mode: pseudonymize
+    token_prefix: UPI
+    description: "Unified Payments Interface VPA handle"
+    risk_level: high
+
+  IFSC:
+    mode: pseudonymize
+    token_prefix: IFSC
+    description: "Indian Financial System Code"
+    risk_level: medium
+
+  # Infrastructure secrets: Irrevocably redacted / purged from payload (never injected)
+  API_KEY:
+    mode: redact
+    token_prefix: REDACTED_SECRET
+    description: "Cloud API key, private key, JWT, AWS token"
+    risk_level: critical
+
+  IP_ADDRESS:
+    mode: redact
+    token_prefix: REDACTED_IP
+    description: "Internal VPC or public IP address"
+    risk_level: low
+
+  # Visual channel
+  FACE:
+    mode: blur
+    token_prefix: FACE_BLUR
+    description: "Human facial portrait in screenshot or avatar"
+    risk_level: medium
+
+egress:
+  fail_closed: true
+  enable_canary_scan: true
+  re_scan_ocr: true
+  max_allowed_leaked_bytes: 0
+  allowlist_domains:
+    - "localhost"
+    - "127.0.0.1"
+    - "shoekart.test"
+    - "defense-systems.internal"
+    - "techblog.internal"

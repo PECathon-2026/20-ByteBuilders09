@@ -1,0 +1,28 @@
+# Bytecode & Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Playwright & Browsers
+.playwright/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables
+.env
+.env.local

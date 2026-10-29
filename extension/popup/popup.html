@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyLens Popup</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="logo-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <circle cx="12" cy="11" r="3"/>
+          </svg>
+        </div>
+        <div class="title-wrap">
+          <div class="brand-name">PrivacyLens</div>
+          <div class="brand-sub">AI Browser Firewall</div>
+        </div>
+      </div>
+
+      <!-- ON/OFF Switch -->
+      <div class="toggle-wrap">
+        <label class="switch" title="Toggle PrivacyLens Protection">
+          <input type="checkbox" id="toggle-protection" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </header>
+
+    <!-- Backend Connection Status Banner -->
+    <div class="backend-status-card" id="backend-status-bar">
+      <div class="status-left">
+        <span class="pulse-indicator" id="status-pulse"></span>
+        <span class="status-text" id="status-text">Connecting to backend...</span>
+      </div>
+      <span class="status-badge" id="status-badge">PING</span>
+    </div>
+
+    <!-- Stats Summary Row -->
+    <div class="stats-row">
+      <div class="stat-pill">
+        <span class="stat-num text-danger" id="stat-count">0</span>
+        <span class="stat-lbl">Sensitive Items</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num text-primary" id="stat-tokens">0</span>
+        <span class="stat-lbl">Vault Tokens</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-num text-success" id="stat-egress">PASS</span>
+        <span class="stat-lbl">Egress Gateway</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-group">
+      <button class="btn btn-primary" id="btn-scan-page">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        Scan Current Page
+      </button>
+      <button class="btn btn-outline" id="btn-open-dashboard" title="Open PrivacyLens Web Dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Dashboard
+      </button>
+    </div>
+
+    <!-- Tabs: Findings vs Redaction Preview -->
+    <div class="tabs-nav">
+      <button class="tab-link active" data-tab="tab-findings">Detected Items</button>
+      <button class="tab-link" data-tab="tab-preview">Sanitized Preview</button>
+    </div>
+
+    <!-- Tab Content: Findings List -->
+    <div class="tab-pane active" id="tab-findings">
+      <div class="findings-list" id="findings-list">
+        <div class="empty-state">
+          Click <strong>"Scan Current Page"</strong> to inspect active tab for sensitive PII and financial credentials.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content: Sanitized Preview -->
+    <div class="tab-pane" id="tab-preview">
+      <div class="preview-box">
+        <div class="preview-header">
+          <span>SAFE TEXT VIEW (Sent to AI)</span>
+          <button class="btn-copy" id="btn-copy-preview" title="Copy preview">Copy</button>
+        </div>
+        <pre class="preview-content" id="preview-text">No active preview. Run a scan first.</pre>
+      </div>
+    </div>
+
+    <!-- Footer Security Notice -->
+    <footer class="footer">
+      <span class="security-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Air-gapped In-Memory RAM Vault • Fail-Closed Egress
+      </span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+Scenario,System,Recall (%),Precision (%),Canary Leakage (%),Task Success (%),Latency (ms)
+Checkout Flow,Baseline (Regex),42.8,100.0,100.0,0.0,0.06
+Checkout Flow,PrivacyLens,100.0,100.0,0.0,100.0,44.26
+Login & Split OTP,Baseline (Regex),33.33,100.0,0.0,0.0,0.46
+Login & Split OTP,PrivacyLens,100.0,100.0,0.0,100.0,17.61
+Customer Support Chat,Baseline (Regex),25.0,100.0,0.0,100.0,0.44
+Customer Support Chat,PrivacyLens,100.0,100.0,0.0,100.0,24.31
+Video Conference Call,Baseline (Regex),0.0,100.0,0.0,100.0,0.73
+Video Conference Call,PrivacyLens,50.0,100.0,0.0,100.0,18.78
+Dev Environment Settings,Baseline (Regex),33.3,100.0,100.0,100.0,0.24
+Dev Environment Settings,PrivacyLens,100.0,100.0,0.0,100.0,19.42
+Adversarial Prompt Injection,Baseline (Regex),0.0,100.0,0.0,100.0,0.53
+Adversarial Prompt Injection,PrivacyLens,0.0,100.0,0.0,100.0,14.64
+OVERALL AVERAGE,Baseline (Regex),22.41,100.0,33.33,66.67,0.41
+OVERALL AVERAGE,PrivacyLens,75.0,100.0,0.0,100.0,23.17

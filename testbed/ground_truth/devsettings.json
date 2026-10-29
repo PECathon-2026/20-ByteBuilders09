@@ -1,0 +1,42 @@
+{
+  "page": "devsettings.html",
+  "title": "InfraConsole - Production Environment Variables",
+  "sensitive_items": [
+    {
+      "type": "API_KEY",
+      "value": "sk-mock-99aXbLq812mZ0p98Kj3198AzX10283mNqp98127391kLpoQ",
+      "selector": "#val-openai",
+      "channel": "dom_code"
+    },
+    {
+      "type": "API_KEY",
+      "value": "AKIAIOSFODNN7EXAMPLE",
+      "selector": "#val-aws-key",
+      "channel": "dom_code"
+    },
+    {
+      "type": "API_KEY",
+      "value": "sk_test_51NzT1982736412983719283719",
+      "selector": "#val-stripe",
+      "channel": "dom_code"
+    },
+    {
+      "type": "IP_ADDRESS",
+      "value": "192.168.1.145",
+      "selector": "#val-db-ip",
+      "channel": "dom_code"
+    },
+    {
+      "type": "API_KEY",
+      "value": "s.q8127mZ901823nOp10298",
+      "selector": "#snippet-connection",
+      "channel": "dom_code"
+    },
+    {
+      "type": "IP_ADDRESS",
+      "value": "10.0.4.82",
+      "selector": "#snippet-connection",
+      "channel": "dom_code"
+    }
+  ]
+}

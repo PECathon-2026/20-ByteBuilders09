@@ -1,0 +1,48 @@
+{
+  "page": "checkout.html",
+  "title": "ShoeKart - Secure Checkout",
+  "sensitive_items": [
+    {
+      "type": "PERSON",
+      "value": "Aarav Sharma",
+      "selector": "#billing-name",
+      "channel": "dom_input"
+    },
+    {
+      "type": "ADDRESS",
+      "value": "Flat 402, Green Glen Layout, Bellandur, Bengaluru 560103",
+      "selector": "#billing-address",
+      "channel": "dom_input"
+    },
+    {
+      "type": "PAN",
+      "value": "ABCPA1234D",
+      "selector": "#pan-input",
+      "channel": "dom_input"
+    },
+    {
+      "type": "AADHAAR",
+      "value": "2341 5678 9012",
+      "selector": "#aadhaar-input",
+      "channel": "dom_input"
+    },
+    {
+      "type": "CARD",
+      "value": "4532 0150 1234 5678",
+      "selector": "#card-number",
+      "channel": "dom_input"
+    },
+    {
+      "type": "CVV",
+      "value": "842",
+      "selector": "#card-cvv",
+      "channel": "dom_input"
+    },
+    {
+      "type": "CARD",
+      "value": "4000123456789010",
+      "selector": "#trap-backup-card",
+      "channel": "hidden_dom"
+    }
+  ]
+}

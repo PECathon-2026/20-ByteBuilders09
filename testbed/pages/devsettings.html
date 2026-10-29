@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>InfraConsole - Production Environment Variables</title>
+  <style>
+    body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #090d16; color: #e2e8f0; margin: 0; padding: 28px; }
+    .card { max-width: 800px; margin: 0 auto; background: #131b2e; border: 1px solid #1e293b; border-radius: 12px; padding: 28px; }
+    h2 { color: #38bdf8; margin-top: 0; }
+    .env-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .env-table th, .env-table td { text-align: left; padding: 12px; border-bottom: 1px solid #1e293b; }
+    .env-table th { color: #94a3b8; font-size: 13px; text-transform: uppercase; }
+    code { background: #0b1120; padding: 4px 8px; border-radius: 4px; color: #f43f5e; font-size: 13px; }
+    .code-block { background: #0b1120; padding: 16px; border-radius: 8px; border: 1px solid #1e293b; color: #38bdf8; overflow-x: auto; margin-top: 20px; font-size: 13px; line-height: 1.6; }
+    .btn-rotate { background: #e11d48; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>Cluster Secrets: prod-cluster-ap-south-1</h2>
+      <button class="btn-rotate" id="btn-rotate-keys">Emergency Rotate</button>
+    </div>
+
+    <table class="env-table">
+      <thead>
+        <tr>
+          <th>Variable Name</th>
+          <th>Secret Value</th>
+          <th>Scope</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OPENAI_API_KEY</td>
+          <td><code id="val-openai">sk-mock-99aXbLq812mZ0p98Kj3198AzX10283mNqp98127391kLpoQ</code></td>
+          <td>Production AI</td>
+        </tr>
+        <tr>
+          <td>AWS_ACCESS_KEY_ID</td>
+          <td><code id="val-aws-key">AKIAIOSFODNN7EXAMPLE</code></td>
+          <td>S3 Backup</td>
+        </tr>
+        <tr>
+          <td>STRIPE_SECRET_KEY</td>
+          <td><code id="val-stripe">sk_test_51NzT1982736412983719283719</code></td>
+          <td>Billing Engine</td>
+        </tr>
+        <tr>
+          <td>PROD_DB_HOST</td>
+          <td><code id="val-db-ip">192.168.1.145:5432</code></td>
+          <td>Internal VPC</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="code-block" id="snippet-connection">
+# Production Kubernetes Deployment YAML snippet
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloud-vault-token
+stringData:
+  VAULT_TOKEN: "s.q8127mZ901823nOp10298"
+  GATEWAY_IP: "10.0.4.82"
+    </div>
+  </div>
+</body>
+</html>

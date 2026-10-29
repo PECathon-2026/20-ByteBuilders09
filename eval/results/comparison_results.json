@@ -1,0 +1,159 @@
+{
+  "timestamp": "2026-10-30 01:06:59",
+  "scenarios": [
+    {
+      "scenario": "Checkout Flow",
+      "page": "checkout.html",
+      "total_sensitive_items": 7,
+      "baseline": {
+        "recall": 42.8,
+        "precision": 100.0,
+        "leakage_rate": 100.0,
+        "canaries_leaked": 1,
+        "total_canaries": 1,
+        "context_preservation": 0.0,
+        "latency_ms": 0.06
+      },
+      "privacylens": {
+        "recall": 100.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 44.26
+      }
+    },
+    {
+      "scenario": "Login & Split OTP",
+      "page": "login.html",
+      "total_sensitive_items": 3,
+      "baseline": {
+        "recall": 33.33,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 0.0,
+        "latency_ms": 0.46
+      },
+      "privacylens": {
+        "recall": 100.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 17.61
+      }
+    },
+    {
+      "scenario": "Customer Support Chat",
+      "page": "support.html",
+      "total_sensitive_items": 4,
+      "baseline": {
+        "recall": 25.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 0.44
+      },
+      "privacylens": {
+        "recall": 100.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 24.31
+      }
+    },
+    {
+      "scenario": "Video Conference Call",
+      "page": "video.html",
+      "total_sensitive_items": 4,
+      "baseline": {
+        "recall": 0.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 0.73
+      },
+      "privacylens": {
+        "recall": 50.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 18.78
+      }
+    },
+    {
+      "scenario": "Dev Environment Settings",
+      "page": "devsettings.html",
+      "total_sensitive_items": 6,
+      "baseline": {
+        "recall": 33.3,
+        "precision": 100.0,
+        "leakage_rate": 100.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 0.24
+      },
+      "privacylens": {
+        "recall": 100.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 19.42
+      }
+    },
+    {
+      "scenario": "Adversarial Prompt Injection",
+      "page": "injection.html",
+      "total_sensitive_items": 3,
+      "baseline": {
+        "recall": 0.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 0.53
+      },
+      "privacylens": {
+        "recall": 0.0,
+        "precision": 100.0,
+        "leakage_rate": 0.0,
+        "canaries_leaked": 0,
+        "total_canaries": 1,
+        "context_preservation": 100.0,
+        "latency_ms": 14.64
+      }
+    }
+  ],
+  "overall": {
+    "baseline": {
+      "avg_recall": 22.41,
+      "avg_precision": 100.0,
+      "avg_leakage_rate": 33.33,
+      "avg_task_success": 66.67,
+      "avg_latency_ms": 0.41
+    },
+    "privacylens": {
+      "avg_recall": 75.0,
+      "avg_precision": 100.0,
+      "avg_leakage_rate": 0.0,
+      "avg_task_success": 100.0,
+      "avg_latency_ms": 23.17
+    }
+  }
+}
