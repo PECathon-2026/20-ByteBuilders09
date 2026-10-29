@@ -15,7 +15,8 @@ from .scenarios import (
 from .pipeline import (
     BaselinePipeline,
     PrivacyLensPipeline,
-    run_scenario_comparison
+    run_scenario_comparison,
+    run_live_text_evaluation
 )
 from .metrics import calculate_metrics
 from .report import (
@@ -30,6 +31,7 @@ __all__ = [
     "BaselinePipeline",
     "PrivacyLensPipeline",
     "run_scenario_comparison",
+    "run_live_text_evaluation",
     "calculate_metrics",
     "run_full_privacy_challenge",
     "export_report_json",

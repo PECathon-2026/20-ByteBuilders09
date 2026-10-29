@@ -3,865 +3,131 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrivacyLens — Local Privacy Firewall for AI Agents</title>
+  <title>PrivacyLens — Air-Gapped Privacy Firewall for Browser AI Agents</title>
   
-  <!-- Red Sun Typography: Instrument Serif + Manrope + JetBrains Mono -->
+  <!-- Modern Clean Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <!-- Ambient Depth Blurs -->
-  <div class="ambient-blur ambient-top-right"></div>
-  <div class="ambient-blur ambient-bottom-left"></div>
-  <div class="ambient-blur ambient-mid-right"></div>
-
-  <!-- Fixed Glassmorphism Header -->
-  <header class="app-header">
-    <a href="#" class="brand">
-      <div class="brand-mark">P</div>
-      <div class="brand-text">
-        <div class="brand-title">PrivacyLens</div>
-        <div class="brand-subtitle">Red Sun Firewall System</div>
-      </div>
-    </a>
-
-    <!-- Center Navigation Links -->
-    <ul class="nav-links">
-      <li><a href="#simulator" class="nav-link">Simulator</a></li>
-      <li><a href="#features" class="nav-link">Features</a></li>
-      <li><a href="#live-lab" class="nav-link">Firewall Lab</a></li>
-      <li><a href="#proof-lab" class="nav-link">Privacy Proof Lab</a></li>
-      <li><a href="#event-stream" class="nav-link">Live Events</a></li>
-    </ul>
-
-    <!-- Right Trust Indicators & Pill CTA -->
-    <div class="nav-cta-group">
-      <div class="trust-badge-pill">
-        <span class="pulse-dot"></span>
-        Fail-Closed Armed
-      </div>
-      <a href="#proof-lab" class="btn-pill-primary">
-        Proof Lab
-      </a>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero-section animate-fade-up">
-    <!-- Top Sparkle Pill Badge -->
-    <div class="hero-pill-badge">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      Air-Gapped Privacy Firewall for AI Agents
-    </div>
-
-    <!-- Editorial Serif Two-Line Headline -->
-    <h1 class="hero-headline">
-      Zero Data Leakage.<br>
-      <em>Air-Gapped Agency.</em>
-    </h1>
-
-    <!-- Subtext in Manrope 18px -->
-    <p class="hero-subtext">
-      PrivacyLens intercepts web pages locally before untrusted cloud LLMs see them.
-      It redacts real credentials into stable token placeholders, resolves secrets in volatile RAM,
-      and mathematically proves 0.0% data leakage through multi-channel canary audits.
-    </p>
-
-    <!-- CTAs with 30px corner radius & shadow -->
-    <div class="hero-cta-group">
-      <a href="#live-lab" class="btn-hero-primary">
-        Launch Interactive Lab
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-      <a href="#features" class="btn-hero-ghost">
-        Explore 3 Core USPs
-      </a>
-    </div>
-  </section>
-
-  <!-- Bento Section: Value Proposition & Animated UI Simulator -->
-  <section class="bento-section" id="simulator">
-    <div class="bento-value-grid">
-      <!-- Left: Text-heavy Editorial Column -->
-      <div class="value-text-col">
-        <span class="section-label">Local Boundary Architecture</span>
-        <h2 class="section-heading-serif">
-          Local defense at the speed of <em>browser automation.</em>
-        </h2>
-        <p style="color: var(--text-muted); font-size: 1.125rem;">
-          Your laptop is the only trusted boundary. Cloud LLMs, public networks, and external websites are treated as untrusted zones.
-        </p>
-
-        <!-- Vertical Feature List with 56px rounded-2xl icon containers -->
-        <div class="feature-vertical-list">
-          <div class="feature-item-row">
-            <div class="feature-icon-box">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            </div>
-            <div>
-              <div class="feature-item-title">RAM-Only Secret Vault</div>
-              <div class="feature-item-desc">Credentials reside strictly in active memory. Zero disk persistence, zero logs, zero cloud transmission.</div>
-            </div>
-          </div>
-
-          <div class="feature-item-row">
-            <div class="feature-icon-box">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            </div>
-            <div>
-              <div class="feature-item-title">Fail-Closed Egress Gateway</div>
-              <div class="feature-item-desc">Re-scans outbound payloads with double-pass OCR and canary detectors. Leaks trigger an instant hard-abort.</div>
-            </div>
-          </div>
-
-          <div class="feature-item-row">
-            <div class="feature-icon-box">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-            </div>
-            <div>
-              <div class="feature-item-title">Indian Financial & Identity Checksums</div>
-              <div class="feature-item-desc">Algorithmic validation for Aadhaar (Verhoeff dihedral group), PAN, UPI VPA handles, IFSC, and Luhn credit cards.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right: Animated UI Simulator Component -->
-      <div class="ui-simulator-card">
-        <div class="simulator-window">
-          <!-- Window Top Bar -->
-          <div class="simulator-topbar">
-            <div class="window-dots">
-              <div class="window-dot red"></div>
-              <div class="window-dot yellow"></div>
-              <div class="window-dot green"></div>
-            </div>
-            <div class="skeleton-address-bar">
-              https://privacylens.internal/checkout/session_9482
-            </div>
-          </div>
-
-          <!-- Window Content Body -->
-          <div class="simulator-body">
-            <div class="skeleton-header-line"></div>
-            
-            <div class="simulator-split-grid">
-              <div class="split-block-peach">
-                <div class="mini-skeleton-line coral"></div>
-                <div class="mini-skeleton-line" style="width: 85%;"></div>
-                <div class="mini-skeleton-line" style="width: 60%;"></div>
-              </div>
-              <div class="split-block-grey">
-                <div class="mini-skeleton-line" style="width: 90%;"></div>
-                <div class="mini-skeleton-line" style="width: 50%;"></div>
-                <div class="mini-skeleton-line" style="width: 70%;"></div>
-              </div>
-            </div>
-
-            <div class="simulator-bottom-text">
-              🔒 Sanitized snapshot dispatched to LLM: [CARD_1], [CVV_1], [EMAIL_1]
-            </div>
-          </div>
-
-          <!-- Window Footer Bar -->
-          <div class="simulator-footer-bar">
-            <div class="footer-status-left">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              RAM VAULT ACTIVE
-            </div>
-            <div class="code-tags-right">
-              <span class="code-tag-dark highlight">[CARD_1] RESOLVED</span>
-              <span class="code-tag-dark">0 BYTES LEAKED</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Bento Grid: 3 Columns, 3rem / 48px Border Radius -->
-  <section class="features-grid-section" id="features">
-    <div class="lab-header-banner">
-      <span class="section-label">Three Architectural Pillars</span>
-      <h2 class="section-heading-serif">Engineered for <em>provable safety.</em></h2>
-    </div>
-
-    <div class="features-bento-grid">
-      <!-- Card Style 1: Spans 2 Columns, White BG, 5% Opacity Background Icon -->
-      <div class="bento-card card-style-large">
-        <svg class="card-bg-icon-faint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-
-        <div>
-          <div class="bento-card-tag">USP 1 • Core Innovation</div>
-          <h3 class="bento-card-title">Secret Injection Engine</h3>
-          <p class="bento-card-desc">
-            The untrusted cloud AI plans tasks using only harmless placeholder tokens like <code>[CARD_1]</code> or <code>[PAN_1]</code>.
-            When an action executes, the trusted <strong>Local Executor</strong> resolves the token against volatile RAM and directly fills the browser DOM. Real credentials never travel over the network.
-          </p>
-        </div>
-
-        <div>
-          <div class="bento-kpi-badge">
-            0 Bytes <span>Cloud Exposure</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card Style 2: Solid #2D3B42 Background, White Text, Coral Icons -->
-      <div class="bento-card card-style-dark" id="benchmark">
-        <div>
-          <div class="card-icon-accent">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          </div>
-          <div class="bento-card-tag">USP 2 • Empirical Proof</div>
-          <h3 class="bento-card-title">0.0% Canary Leakage</h3>
-          <p class="bento-card-desc">
-            Standard text-only regex gateways leak sensitive data across hidden DOM tags and screenshot images. PrivacyLens tests against trackable canaries and proves <strong>0.0% data leakage</strong> across all 4 multi-modal channels.
-          </p>
-        </div>
-
-        <div>
-          <div class="bento-kpi-badge" style="background: rgba(255, 255, 255, 0.1); color: #FFA588;">
-            0.0% <span>vs 100% Baseline</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card Style 3: Standard White, Vertical, Accent Shifts on Hover -->
-      <div class="bento-card card-style-standard">
-        <div>
-          <div class="card-icon-accent">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="bento-card-tag">USP 3 • Checksum Engine</div>
-          <h3 class="bento-card-title">Fail-Closed Gateway</h3>
-          <p class="bento-card-desc">
-            Mathematical validation for Indian Aadhaar (Verhoeff dihedral group), PAN, UPI handles, and Luhn credit cards. Any egress scanner anomaly triggers an instant hard-block.
-          </p>
-        </div>
-
-        <div>
-          <div class="bento-kpi-badge">
-            100% <span>Fail-Closed Pass</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Live Interactive Lab Section (Connected to Backend on Port 8000) -->
-  <section class="lab-section" id="live-lab">
-    <div class="lab-header-banner">
-      <span class="section-label">Interactive Mission Control</span>
-      <h2 class="section-heading-serif">Live <em>Firewall Lab.</em></h2>
-      <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
-        Test multi-modal redaction, secret injection, and egress protection live on realistic browser workflows.
-      </p>
-    </div>
-
-    <!-- Live Backend Overview Stats Ribbon -->
-    <div class="overview-ribbon">
-      <div class="overview-card">
-        <div class="ov-label">Protection Status</div>
-        <div class="ov-val text-success" id="ov-status">ACTIVE</div>
-        <div class="ov-sub">Fail-Closed Armed</div>
-      </div>
-      <div class="overview-card">
-        <div class="ov-label">Total Scans</div>
-        <div class="ov-val text-primary" id="ov-scans">0</div>
-        <div class="ov-sub">Page & Tab Scans</div>
-      </div>
-      <div class="overview-card">
-        <div class="ov-label">Sensitive Items Detected</div>
-        <div class="ov-val text-danger" id="ov-findings">0</div>
-        <div class="ov-sub">Card, Aadhaar, PAN, UPI</div>
-      </div>
-      <div class="overview-card">
-        <div class="ov-label">Payloads Blocked</div>
-        <div class="ov-val text-warning" id="ov-blocked">0</div>
-        <div class="ov-sub">Egress Interceptions</div>
-      </div>
-      <div class="overview-card">
-        <div class="ov-label">Pending Approvals</div>
-        <div class="ov-val text-accent" id="ov-pending">0</div>
-        <div class="ov-sub">Consequential Actions</div>
-      </div>
-    </div>
-
-    <!-- Scenario Selector & Action Bar -->
-    <div class="control-panel">
-      <div class="scenario-selector">
-        <span class="control-label">Testbed Scenario:</span>
-        <div class="scenario-pills" id="scenario-pill-list">
-          <button class="pill active" data-page="checkout.html">Checkout & Card</button>
-          <button class="pill" data-page="login.html">Login & Split OTP</button>
-          <button class="pill" data-page="support.html">Support & UPI</button>
-          <button class="pill" data-page="video.html">Video Call (Faces)</button>
-          <button class="pill" data-page="devsettings.html">Dev Settings & Keys</button>
-          <button class="pill" data-page="injection.html">Prompt Injection Attack</button>
-        </div>
-      </div>
-
-      <div class="action-buttons">
-        <button class="btn btn-primary" id="btn-run-scan">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Run Firewall Scan
-        </button>
-        <button class="btn btn-accent" id="btn-run-agent">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Execute AI Agent
-        </button>
-        <button class="btn btn-outline" id="btn-run-benchmark">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          Canary Benchmark
-        </button>
-      </div>
-    </div>
-
-    <!-- Main Workspace -->
-    <div class="main-layout">
-      <!-- Left Column: Visual Inspector & Secret Injection -->
-      <div class="col-visual">
-        <!-- Visual Redaction Card -->
-        <div class="card visual-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              Multi-Modal Redaction Inspector
-            </div>
-            <div class="view-toggles">
-              <button class="toggle-btn active" id="btn-view-side">Side-by-Side</button>
-              <button class="toggle-btn" id="btn-view-clean">Sanitized Only</button>
-              <button class="toggle-btn" id="btn-view-raw">Raw (Unsafe)</button>
-            </div>
-          </div>
-
-          <div class="visual-viewport" id="viewport-container">
-            <div class="preview-panel preview-raw" id="panel-raw">
-              <div class="viewport-label label-danger">RAW WEBPAGE (Contains Secrets)</div>
-              <img id="img-raw" src="" alt="Raw Page Screenshot" />
-            </div>
-            <div class="preview-panel preview-clean" id="panel-clean">
-              <div class="viewport-label label-safe">SANITIZED (Safe for Untrusted LLM)</div>
-              <img id="img-clean" src="" alt="Sanitized Page Screenshot" />
-            </div>
-          </div>
-
-          <div class="visual-footer">
-            <div class="pill-stat"><strong>Egress Re-scan:</strong> <span id="stat-egress" class="text-success">PASS (0 Hits)</span></div>
-            <div class="pill-stat"><strong>Canaries Leaked:</strong> <span id="stat-canary" class="text-success">0</span></div>
-            <div class="pill-stat"><strong>Cloud Payload:</strong> <span id="stat-bytes">Clean</span></div>
-          </div>
-        </div>
-
-        <!-- Secret Injection Visualizer Card (USP 1) -->
-        <div class="card secret-injection-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              USP 1: Local Secret Injection Visualizer
-            </div>
-            <span class="badge badge-success">AIR-GAPPED VAULT</span>
-          </div>
-
-          <div class="injection-grid">
-            <div class="injection-box ai-view">
-              <div class="box-tag" style="color: var(--primary);">What Cloud AI Sees (Untrusted)</div>
-              <div class="code-snippet" id="snippet-ai">
-{
-  "action": "type",
-  "element_id": "pl-3",
-  "value": "<span class='highlight-token'>[CARD_1]</span>"
-}
-              </div>
-              <div class="box-desc">AI plans only with token placeholders. Never sees real secret!</div>
-            </div>
-
-            <div class="injection-arrow">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-              <span>RAM Resolve</span>
-            </div>
-
-            <div class="injection-box executor-view">
-              <div class="box-tag" style="color: var(--success);">What Local Executor Injects (Trusted)</div>
-              <div class="code-snippet" id="snippet-executor">
-// Injected directly into DOM:
-page.fill("#card-number", "<span class='highlight-secret'>4532 0150 1234 5678</span>");
-// Secret never transmitted to network
-              </div>
-              <div class="box-desc">Browser receives real credentials locally. Network payload: 0 bytes leaked.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Findings Table, Approval Center, Benchmark, Audit Trail -->
-      <div class="col-data">
-        <!-- Findings Table -->
-        <div class="card findings-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              Explainable Detection Records
-            </div>
-            <span class="badge badge-primary" id="badge-findings-count">0 Detected</span>
-          </div>
-          <div class="table-container">
-            <table class="findings-table">
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Token</th>
-                  <th>Channel</th>
-                  <th>Confidence</th>
-                  <th>Diagnostic Reason</th>
-                </tr>
-              </thead>
-              <tbody id="findings-table-body">
-                <tr>
-                  <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
-                    Select a scenario above and click "Run Firewall Scan" to inspect live detections.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Human Approval Center Card -->
-        <div class="card approval-card" id="approval-center-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Human Approval Center
-            </div>
-            <span class="badge badge-warning" id="badge-pending-count">0 Actions Pending</span>
-          </div>
-          <div id="approval-list-container">
-            <div class="empty-state">No consequential actions awaiting approval. When the agent initiates a payment, the ticket appears here.</div>
-          </div>
-        </div>
-
-        <!-- Canary Benchmark KPI Card (USP 2) -->
-        <div class="card benchmark-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              USP 2: Canary Leakage & Precision Benchmark
-            </div>
-            <button class="btn btn-outline" style="padding: 6px 14px; font-size: 0.6875rem;" id="btn-refresh-eval">Refresh</button>
-          </div>
-
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-label">PrivacyLens Leakage</div>
-              <div class="kpi-value text-success" id="kpi-pl-leak">0.0%</div>
-              <div class="kpi-sub">ZERO leak proved</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Baseline Leakage</div>
-              <div class="kpi-value text-danger" id="kpi-base-leak">100.0%</div>
-              <div class="kpi-sub">Leaked via hidden DOM</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Overall Recall</div>
-              <div class="kpi-value text-primary" id="kpi-recall">75.0%</div>
-              <div class="kpi-sub">Multi-modal engine</div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-label">Firewall Latency</div>
-              <div class="kpi-value text-accent" id="kpi-latency">~23 ms</div>
-              <div class="kpi-sub">Real-time overhead</div>
-            </div>
-          </div>
-
-          <!-- Comparative Evaluation Table -->
-          <div class="table-container" style="max-height: 200px; margin-top: 16px;">
-            <table class="findings-table">
-              <thead>
-                <tr>
-                  <th>Scenario</th>
-                  <th>System</th>
-                  <th>Recall</th>
-                  <th>Canary Leakage</th>
-                  <th>Task Success</th>
-                  <th>Latency</th>
-                </tr>
-              </thead>
-              <tbody id="eval-table-body">
-                <!-- Dynamically populated from /api/eval -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- In-Memory Redacted Audit Stream -->
-        <div class="card audit-card">
-          <div class="card-header">
-            <div class="card-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-              Zero-Leak Audit Stream (In-Memory)
-            </div>
-            <span class="badge badge-warning">RAW SECRETS PURGED</span>
-          </div>
-          <div class="terminal-body" id="audit-log-stream">
-            <div class="log-line" style="color: #94A3B8;">[SYSTEM] PrivacyLens Red Sun Firewall Engine Armed. Awaiting trigger...</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==============================================================================
-       PRIVACY PROOF LAB: PROVE BEFORE YOU TRUST
-       Observable, evidence-based comparative security evaluation
-       ============================================================================== -->
-  <section class="proof-lab-section" id="proof-lab">
-    <div class="lab-header-banner">
-      <div class="hero-pill-badge" style="margin-bottom: 14px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Evidence-Based Security Pipeline
-      </div>
-      <h2 class="section-heading-serif">Privacy Proof Lab — <em>Prove Before You Trust.</em></h2>
-      <p style="color: var(--text-muted); max-width: 760px; margin: 0 auto; font-size: 1.1rem;">
-        No fake statistics or pre-recorded metrics. Run live attack vectors comparing a naive text-only regex detector against PrivacyLens multi-modal firewall. Verify that sensitive canaries are blocked before egress.
-      </p>
-    </div>
-
-    <!-- Capability & System Boundary Disclosures Card -->
-    <div class="card boundaries-card">
-      <div class="card-header">
-        <div class="card-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          System Capabilities & Security Boundaries (Honest Disclosure)
-        </div>
-        <span class="badge badge-primary">ACTIVE TRUST BOUNDARY</span>
-      </div>
-      <div class="boundaries-grid">
-        <div class="boundary-item">
-          <div class="boundary-label">Visible DOM Text & Form Inputs</div>
-          <div class="boundary-status text-success">
-            <span class="dot-active"></span> 100% Inspected & Sanitized
-          </div>
-          <div class="boundary-desc">Extracts text nodes, inputs, password types, split OTP sequences.</div>
-        </div>
-        <div class="boundary-item">
-          <div class="boundary-label">Checksum Validation Engine</div>
-          <div class="boundary-status text-success">
-            <span class="dot-active"></span> Verhoeff (Aadhaar), Luhn (Cards), PAN, UPI
-          </div>
-          <div class="boundary-desc">Format-aware mathematical verification ensures high precision.</div>
-        </div>
-        <div class="boundary-item">
-          <div class="boundary-label">Fail-Closed Egress Gateway</div>
-          <div class="boundary-status text-success">
-            <span class="dot-active"></span> Armed (Hard Reject on Any Leak)
-          </div>
-          <div class="boundary-desc">Final line of defense. Intercepts deliberate or unredacted secrets.</div>
-        </div>
-        <div class="boundary-item">
-          <div class="boundary-label">Screenshot OCR Pipeline</div>
-          <div class="boundary-status" id="ocr-status-indicator">
-            <span class="dot-warning"></span> Probing Host Engine...
-          </div>
-          <div class="boundary-desc" id="ocr-status-guidance">Graceful degradation active if host lacks Tesseract binary. Never fabricates OCR hits.</div>
-        </div>
-      </div>
-      <div class="boundary-disclaimer">
-        <strong>Security Boundary Disclosure:</strong> PrivacyLens actively protects browser DOM content and all payloads routed through the local firewall gateway. It does not claim passive network interception of third-party AI chat websites unless routed through this gateway.
-      </div>
-    </div>
-
-    <!-- Master Action Bar: Run Challenge, Inject Canary, Export Report -->
-    <div class="proof-lab-actions-bar">
-      <div class="action-buttons-left">
-        <button class="btn btn-primary" id="btn-run-challenge">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Run Full Privacy Challenge
-        </button>
-        <button class="btn btn-danger-outline" id="btn-test-egress-canary" title="Deliberately send unredacted canary secret to egress gateway">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-          Test Fail-Closed Egress (Inject Canary)
-        </button>
-      </div>
-      <div class="action-buttons-right">
-        <a href="/api/proof-lab/export/json" class="btn btn-outline" id="btn-export-json" download="privacylens_proof_report.json">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export Evidence JSON
-        </a>
-        <a href="/api/proof-lab/export/csv" class="btn btn-outline" id="btn-export-csv" download="privacylens_proof_report.csv">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export Evidence CSV
-        </a>
-      </div>
-    </div>
-
-    <!-- 6 Synthetic Attack Scenarios Grid -->
-    <div class="scenarios-challenge-grid" id="scenarios-grid">
-      <!-- Populated dynamically from /api/proof-lab/scenarios -->
-    </div>
-
-    <!-- Live Macro Summary KPI Grid -->
-    <div class="kpi-grid" style="margin: 32px 0 24px;">
-      <div class="kpi-card">
-        <div class="kpi-label">PrivacyLens Canary Leakage</div>
-        <div class="kpi-value text-success" id="proof-pl-leak">0.0%</div>
-        <div class="kpi-sub" id="proof-pl-leak-sub">0 planted canaries leaked</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Baseline (Regex) Leakage</div>
-        <div class="kpi-value text-danger" id="proof-base-leak">83.3%</div>
-        <div class="kpi-sub" id="proof-base-leak-sub">Leaked across 5 of 6 vectors</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Egress Payloads Blocked</div>
-        <div class="kpi-value text-primary" id="proof-blocked-count">6 / 6</div>
-        <div class="kpi-sub">Fail-closed enforcement</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-label">Average Pipeline Latency</div>
-        <div class="kpi-value text-accent" id="proof-avg-latency">~19 ms</div>
-        <div class="kpi-sub">Real execution timing</div>
-      </div>
-    </div>
-
-    <!-- Side-by-Side Detailed Comparative Results Table -->
-    <div class="card proof-table-card">
-      <div class="card-header">
-        <div class="card-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          Reproducible Benchmark: Baseline (Naive Regex) vs PrivacyLens Firewall
-        </div>
-        <span class="badge badge-success">MATHEMATICAL GROUND TRUTH</span>
-      </div>
-      <div class="table-container">
-        <table class="findings-table">
-          <thead>
-            <tr>
-              <th>Attack Vector Scenario</th>
-              <th>Channel / Vulnerability</th>
-              <th>Planted Canaries</th>
-              <th>Baseline Leakage</th>
-              <th>PrivacyLens Leakage</th>
-              <th>Egress Decision</th>
-              <th>Latency</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="proof-lab-table-body">
-            <tr>
-              <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 32px;">
-                Click <strong>"Run Full Privacy Challenge"</strong> or select an individual scenario above to execute live comparative tests.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Scenario Deep-Dive Inspector (Side-by-Side Diff) -->
-    <div class="card scenario-deep-dive-card" id="scenario-deep-dive" style="margin-top: 32px; display: none;">
-      <div class="card-header">
-        <div class="card-title" id="deep-dive-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Scenario Evidence Inspector
-        </div>
-        <span class="badge badge-primary" id="deep-dive-badge">EVIDENCE INSPECT</span>
-      </div>
-      <div class="deep-dive-grid">
-        <div class="deep-dive-col">
-          <div class="deep-dive-col-header">
-            <span class="text-danger">RAW PAYLOAD &amp; BASELINE OUTPUT</span>
-            <span class="badge badge-danger">CANARIES EXPOSED</span>
-          </div>
-          <div class="code-box danger-border" id="deep-dive-raw"></div>
-        </div>
-        <div class="deep-dive-col">
-          <div class="deep-dive-col-header">
-            <span class="text-success">PRIVACYLENS SANITIZED OUTPUT</span>
-            <span class="badge badge-success">0 CANARIES LEAKED</span>
-          </div>
-          <div class="code-box success-border" id="deep-dive-sanitized"></div>
-        </div>
-      </div>
-      <div class="deep-dive-footer">
-        <div class="verdict-banner" id="deep-dive-verdict"></div>
-      </div>
-    </div>
-
-    <!-- Live Observable Event Stream Section -->
-    <div class="card event-stream-card" id="event-stream" style="margin-top: 32px;">
-      <div class="card-header">
-        <div class="card-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          Live Security Event Stream (In-Memory Event Bus)
-        </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-          <span class="live-pulse-badge"><span class="pulse-dot"></span> LIVE STREAM</span>
-          <button class="btn btn-sm btn-outline" id="btn-clear-events">Clear Feed</button>
-        </div>
-      </div>
-      <div class="event-stream-container" id="proof-lab-event-timeline">
-        <!-- Live events dynamically inserted from /api/events/history -->
-        <div class="event-item">
-          <span class="event-time">--:--:--</span>
-          <span class="event-badge badge-primary">SYSTEM_READY</span>
-          <span class="event-msg">Connecting to backend live event bus...</span>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="cta-section">
-    <div class="cta-container">
-      <h2 class="cta-headline">
-        Stop data leaks before they<br>
-        <em>reach the cloud.</em>
-      </h2>
-      <p class="cta-subtext">
-        Equip your autonomous AI browser agents with an air-gapped local privacy firewall. Zero configuration, instant protection, and mathematically verified zero leakage.
-      </p>
-
+  <div class="app-shell">
+    <!-- Left Sidebar Navigation -->
+    <aside class="app-sidebar">
       <div>
-        <a href="#live-lab" class="btn-cta-white">
-          Launch Firewall Lab Now
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <!-- Brand Header -->
+        <a href="/dashboard" class="sidebar-brand" id="brand-link">
+          <div class="brand-icon-shield">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">PrivacyLens</div>
+            <div class="brand-badge">PECathon 2026 • PS-004</div>
+          </div>
         </a>
+
+        <!-- Fail-Closed Status Badge -->
+        <div class="sidebar-status-banner">
+          <span class="pulse-dot"></span>
+          <span>Fail-Closed Armed</span>
+        </div>
+
+        <!-- 6 Main Sidebar Navigation Links -->
+        <nav class="sidebar-nav">
+          <a href="/dashboard" class="sidebar-nav-item active" data-route="/dashboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            <span>Overview</span>
+          </a>
+
+          <a href="/protection" class="sidebar-nav-item" data-route="/protection">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/>
+            </svg>
+            <span>Live Protection</span>
+          </a>
+
+          <a href="/evidence" class="sidebar-nav-item" data-route="/evidence">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <span>Evidence Inspector</span>
+          </a>
+
+          <a href="/test-lab" class="sidebar-nav-item" data-route="/test-lab">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><line x1="8.5" y1="2" x2="15.5" y2="2"/><line x1="7" y1="16" x2="17" y2="16"/>
+            </svg>
+            <span>Security Test Lab</span>
+          </a>
+
+          <a href="/activity" class="sidebar-nav-item" data-route="/activity">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            <span>Activity Logs</span>
+          </a>
+
+          <a href="/settings" class="sidebar-nav-item" data-route="/settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </nav>
       </div>
 
-      <div class="cta-trust-bar">
-        AIR-GAPPED LOCAL RAM VAULT • 0 DISK WRITES • FAIL-CLOSED EGRESS • INDIA-SPECIFIC VALIDATORS
+      <!-- Bottom System Status Card -->
+      <div class="sidebar-footer-card">
+        <div class="sidebar-footer-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          RAM Secret Vault
+        </div>
+        <div class="sidebar-footer-desc">
+          Volatile memory only.<br>
+          0 disk writes • 0 cloud exposure.
+        </div>
       </div>
-    </div>
-  </section>
+    </aside>
 
-  <!-- Footer (Deep Ink #2D3B42, 5-Column Grid) -->
-  <footer class="app-footer">
-    <div class="footer-container">
-      <div class="footer-grid">
-        <!-- Column 1: Brand & Socials -->
-        <div class="footer-col-brand">
-          <div style="display: flex; align-items: center; gap: 14px;">
-            <div class="brand-mark">P</div>
-            <div class="footer-brand-title">PrivacyLens</div>
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Fixed Top Navigation Bar -->
+      <header class="app-topbar">
+        <div class="topbar-title-group">
+          <h1 id="topbar-heading">Overview Dashboard</h1>
+          <p id="topbar-subheading">Real-time privacy firewall metrics and system telemetry</p>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="btn btn-sm btn-outline" id="btn-quick-run-test">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Run Security Test
+          </button>
+          <a href="/api/export-report/json" class="btn btn-sm btn-outline" id="btn-quick-export" download="privacylens_audit_report.json">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export Audit Report
+          </a>
+          <div class="trust-badge-pill" id="vault-pill-badge" title="Active tokens stored in volatile RAM">
+            <span class="pulse-dot"></span>
+            <span id="vault-active-count">0 Tokens in RAM</span>
           </div>
-          <p class="footer-desc">
-            The local privacy firewall for AI-assisted browser automation. Protecting user credentials, identity, and financial data with air-gapped secret injection.
-          </p>
-          <div class="social-icons-row">
-            <a href="https://github.com" class="social-icon-circle" aria-label="GitHub">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            </a>
-            <a href="https://twitter.com" class="social-icon-circle" aria-label="Twitter">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-            </a>
-            <a href="#" class="social-icon-circle" aria-label="Documentation">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-            </a>
-          </div>
         </div>
+      </header>
 
-        <!-- Column 2: Product -->
-        <div class="footer-col">
-          <h4>Product</h4>
-          <ul class="footer-links">
-            <li><a href="#simulator">Animated Simulator</a></li>
-            <li><a href="#features">Secret Injection</a></li>
-            <li><a href="#live-lab">Firewall Lab</a></li>
-            <li><a href="#benchmark">Canary Benchmark</a></li>
-            <li><a href="/docs">FastAPI OpenAPI</a></li>
-          </ul>
-        </div>
-
-        <!-- Column 3: Detection -->
-        <div class="footer-col">
-          <h4>Validators</h4>
-          <ul class="footer-links">
-            <li><a href="#live-lab">Aadhaar (Verhoeff)</a></li>
-            <li><a href="#live-lab">PAN Entity Logic</a></li>
-            <li><a href="#live-lab">UPI & IFSC Handles</a></li>
-            <li><a href="#live-lab">Luhn Credit Cards</a></li>
-            <li><a href="#live-lab">Split OTP Sequences</a></li>
-          </ul>
-        </div>
-
-        <!-- Column 4: Architecture -->
-        <div class="footer-col">
-          <h4>Security</h4>
-          <ul class="footer-links">
-            <li><a href="#features">Fail-Closed Egress</a></li>
-            <li><a href="#features">In-Memory RAM Vault</a></li>
-            <li><a href="#live-lab">Human Approval Gate</a></li>
-            <li><a href="#features">Prompt Injection Filter</a></li>
-            <li><a href="#live-lab">Redacted Audit Stream</a></li>
-          </ul>
-        </div>
-
-        <!-- Column 5: Project -->
-        <div class="footer-col">
-          <h4>PECathon</h4>
-          <ul class="footer-links">
-            <li><a href="#">Team ByteBuilders09</a></li>
-            <li><a href="#">Demo Walkthrough</a></li>
-            <li><a href="#">Source Code</a></li>
-            <li><a href="#">Security Disclosure</a></li>
-            <li><a href="#">License (Apache 2.0)</a></li>
-          </ul>
-        </div>
+      <!-- Dynamic Page Container (Rendered by Client-Side Router) -->
+      <div class="app-content" id="app-content">
+        <!-- Injected dynamically by app.js router -->
       </div>
-
-      <!-- Bottom Bar -->
-      <div class="footer-bottom-bar">
-        <div>© 2026 PrivacyLens • ByteBuilders09 • PECathon Finalist. All rights reserved.</div>
-        <ul class="legal-links">
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Trust Boundary Spec</a></li>
-          <li><a href="#">Security Audit</a></li>
-        </ul>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Human Approval Modal -->
-  <div class="modal-backdrop" id="approval-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-icon danger">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
-        <div>
-          <div class="modal-title">Human Approval Required</div>
-          <div class="modal-sub">An irreversible action has been requested by the AI browser agent.</div>
-        </div>
-      </div>
-
-      <div class="modal-content">
-        <div class="approval-field">
-          <span class="field-label">Action Target:</span>
-          <span class="field-val" id="appr-target">#pay-button (ShoeKart Checkout)</span>
-        </div>
-        <div class="approval-field">
-          <span class="field-label">Transaction Summary:</span>
-          <span class="field-val highlight" id="appr-desc">Authorize payment of Rs. 2,499 with card [CARD_1]</span>
-        </div>
-        <div class="approval-field">
-          <span class="field-label">Safety Status:</span>
-          <span class="field-val" style="color: var(--success);">Local Secret Injection Confirmed (0 cloud bytes leaked)</span>
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn btn-outline" id="btn-reject-action">Reject Action</button>
-        <button class="btn btn-primary" id="btn-approve-action">Approve & Execute Locally</button>
-      </div>
-    </div>
+    </main>
   </div>
 
+  <!-- Main Multi-Page Application Engine -->
   <script src="/static/app.js"></script>
 </body>
 </html>

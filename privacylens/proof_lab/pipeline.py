@@ -326,6 +326,10 @@ def run_scenario_comparison(scenario: Dict[str, Any]) -> Dict[str, Any]:
     baseline_result = baseline.execute(scenario)
     privacylens_result = privacylens.execute(scenario)
 
+    raw_snapshot = scenario.get("snapshot", {})
+    raw_text = raw_snapshot.get("text", "")
+    raw_payload_sample = json.dumps({k: v for k, v in raw_snapshot.items() if k != "image"}, default=str)
+
     return {
         "scenario_id": scenario["id"],
         "scenario_name": scenario["name"],
@@ -334,6 +338,64 @@ def run_scenario_comparison(scenario: Dict[str, Any]) -> Dict[str, Any]:
         "ground_truth_count": len(scenario.get("planted_canaries", [])),
         "planted_canaries": scenario.get("planted_canaries", []),
         "expected_safe_outcome": scenario["expected_safe_outcome"],
+        "raw_input_text": raw_text,
+        "raw_payload_sample": raw_payload_sample,
         "baseline": baseline_result,
         "privacylens": privacylens_result
     }
+
+
+def run_live_text_evaluation(input_text: str, url: str = "http://localhost/live-scan") -> Dict[str, Any]:
+    """
+    Evaluates arbitrary LIVE user text or custom payload through both Baseline and PrivacyLens.
+    Allows zero-hardcoding testing during hackathon presentations.
+    """
+    start_time = time.perf_counter()
+    engine = DetectionEngine()
+    findings = engine.scan_text(input_text)
+
+    # Check for prompt injection
+    inj = detect_prompt_injection(input_text)
+    if inj["is_injection"]:
+        findings.append({
+            "type": "PROMPT_INJECTION",
+            "value": inj.get("matched_pattern", "malicious_override"),
+            "confidence": 0.95,
+            "reason": f"Prompt injection: {inj['reason']}",
+            "source": "injection_filter"
+        })
+
+    # Baseline naive regex replacement
+    base_text = NAIVE_CARD_REGEX.sub("[CARD_REDACTED]", input_text)
+    base_text = NAIVE_EMAIL_REGEX.sub("[EMAIL_REDACTED]", base_text)
+
+    # PrivacyLens Sanitization with in-memory RAM vault
+    vault = LocalSecretVault()
+    sanitized_text = sanitize_text(input_text, findings, vault)
+
+    # Validate egress
+    egress_res = validate_outgoing_payload(sanitized_text, vault=vault, fail_closed=True)
+    decision = "BLOCKED" if not egress_res["passed"] else "CLEARED"
+    elapsed_ms = (time.perf_counter() - start_time) * 1000.0
+
+    return {
+        "raw_input": input_text,
+        "detected_findings": findings,
+        "latency_ms": round(elapsed_ms, 2),
+        "baseline": {
+            "output_text": base_text,
+            "detected_count": (1 if "[CARD_REDACTED]" in base_text else 0) + (1 if "[EMAIL_REDACTED]" in base_text else 0)
+        },
+        "privacylens": {
+            "sanitized_text": sanitized_text,
+            "detected_count": len(findings),
+            "findings": findings,
+            "vault_tokens": vault.get_all_raw_secrets(),
+            "egress_decision": decision,
+            "egress_violations": egress_res.get("leaks", []),
+            "status": "PROTECTED" if decision == "CLEARED" else "BLOCKED",
+            "canaries_leaked": 0 if decision == "CLEARED" else len(egress_res.get("leaks", [])),
+            "sanitized_bytes": len(sanitized_text.encode("utf-8"))
+        }
+    }
+

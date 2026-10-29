@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Human Approval Center — PrivacyLens 2.0</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="ambient-blur ambient-top-right"></div>
+  <div class="ambient-blur ambient-bottom-left"></div>
+
+  <!-- Shared Top Navigation Header (Same-Tab Multi-Page Links) -->
+  <header class="app-header">
+    <a href="/" class="brand">
+      <div class="brand-mark">P</div>
+      <div class="brand-text">
+        <div class="brand-title">PrivacyLens</div>
+        <div class="brand-subtitle">PS-004 AI Privacy Firewall</div>
+      </div>
+    </a>
+
+    <!-- Multi-Page Navigation Bar -->
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Live Scanner</a></li>
+      <li><a href="/proof-lab.html" class="nav-link">Privacy Proof Lab</a></li>
+      <li><a href="/gateway.html" class="nav-link">Egress Gateway</a></li>
+      <li><a href="/approvals.html" class="nav-link active" style="color: var(--primary); font-weight: 700;">Approval Center</a></li>
+      <li><a href="/events.html" class="nav-link">Live Events</a></li>
+    </ul>
+
+    <div class="nav-cta-group">
+      <div class="trust-badge-pill">
+        <span class="pulse-dot"></span>
+        Fail-Closed Armed
+      </div>
+    </div>
+  </header>
+
+  <main class="proof-lab-section" style="padding-top: 130px;">
+    <div class="lab-header-banner">
+      <div class="hero-pill-badge" style="margin-bottom: 14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Human-in-the-Loop Safety Gate
+      </div>
+      <h1 class="section-heading-serif">Approval Center &amp; <em>Agent Guardrails.</em></h1>
+      <p style="color: var(--text-muted); max-width: 760px; margin: 0 auto; font-size: 1.125rem;">
+        Irreversible actions such as payment authorizations, account deletions, and data submissions are intercepted by the local executor and require explicit human confirmation.
+      </p>
+    </div>
+
+    <!-- Active Tickets Card -->
+    <div class="card" style="margin-bottom: 32px;">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Pending Consequential Action Tickets
+        </div>
+        <span class="badge badge-warning" id="badge-pending-count">0 Actions Pending</span>
+      </div>
+
+      <div style="padding: 16px 0;">
+        <div id="approval-list-container">
+          <div class="empty-state">No consequential actions currently awaiting approval. Click "Simulate Payment Action" below to test the ticket pipeline.</div>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 18px;">
+          <button class="btn btn-primary" id="btn-create-sample-ticket">
+            Simulate Payment Action (ShoeKart Rs. 2,499)
+          </button>
+          <span style="font-size: 0.8125rem; color: var(--text-muted);">Triggers Human-in-the-Loop review ticket for authorization</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Schema & Guardrails Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Agent Action Schema &amp; Strict Security Rules
+        </div>
+        <span class="badge badge-primary">DETERMINISTIC VALIDATOR</span>
+      </div>
+      <div style="padding: 16px 0;">
+        <div class="boundaries-grid">
+          <div class="boundary-item">
+            <div class="boundary-label">Action Allowlist</div>
+            <div class="boundary-status text-success">click, type, select, scroll, wait, done</div>
+            <div class="boundary-desc">All system calls outside strict allowlist are rejected immediately.</div>
+          </div>
+          <div class="boundary-item">
+            <div class="boundary-label">Target Verification</div>
+            <div class="boundary-status text-success">Deterministic pl-X Elements</div>
+            <div class="boundary-desc">Guarantees target exists on the sanitized page snapshot.</div>
+          </div>
+          <div class="boundary-item">
+            <div class="boundary-label">Domain Boundaries</div>
+            <div class="boundary-status text-success">Localhost &amp; Authorized Hosts</div>
+            <div class="boundary-desc">Prevents indirect prompt injections from navigating to C2 servers.</div>
+          </div>
+          <div class="boundary-item">
+            <div class="boundary-label">Irreversible Action Gate</div>
+            <div class="boundary-status text-warning">Pay, Delete, Submit, Transfer</div>
+            <div class="boundary-desc">Always paused for explicit user approval before local execution.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("approval-list-container");
+      const badge = document.getElementById("badge-pending-count");
+      const btnSample = document.getElementById("btn-create-sample-ticket");
+
+      async function loadTickets() {
+        try {
+          const res = await fetch("/approval/pending");
+          const tickets = await res.json();
+          if (badge) badge.innerText = `${tickets.length} Actions Pending`;
+
+          if (tickets.length === 0) {
+            container.innerHTML = `<div class="empty-state">No consequential actions currently awaiting approval. Click "Simulate Payment Action" below to test the ticket pipeline.</div>`;
+            return;
+          }
+
+          container.innerHTML = tickets.map(t => `
+            <div class="approval-item">
+              <div>
+                <div class="appr-info-title">${escapeHtml(t.description || "Action confirmation requested")}</div>
+                <div class="appr-info-desc">Target Element: <code>${escapeHtml(t.element ? t.element.selector : "N/A")}</code> • Domain: <code>${escapeHtml(t.element ? t.element.domain : "localhost")}</code></div>
+              </div>
+              <div class="appr-btn-row">
+                <button class="btn btn-sm btn-outline" onclick="respond('${t.ticket_id}', 'reject')">Reject Action</button>
+                <button class="btn btn-sm btn-primary" onclick="respond('${t.ticket_id}', 'approve')">Approve &amp; Inject Secret</button>
+              </div>
+            </div>
+          `).join("");
+        } catch (e) {}
+      }
+
+      window.respond = async (ticketId, decision) => {
+        await fetch(`/approval/${ticketId}/decision`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ decision: decision })
+        });
+        alert(`Action ${decision.toUpperCase()} recorded.`);
+        loadTickets();
+      };
+
+      btnSample.addEventListener("click", async () => {
+        await fetch("/approval/request", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: { action: "click", element_id: "pl-9" },
+            target: "#pay-button (ShoeKart Checkout)",
+            description: "Authorize payment of Rs. 2,499 with card [CARD_1]",
+            domain: "shoekart.internal"
+          })
+        });
+        loadTickets();
+      });
+
+      function escapeHtml(s) {
+        if (!s) return "";
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      }
+
+      loadTickets();
+      setInterval(loadTickets, 2500);
+    });
+  </script>
+</body>
+</html>
