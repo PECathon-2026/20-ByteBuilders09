@@ -15,8 +15,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const statEgress = document.getElementById("stat-egress");
 
   const btnScanPage = document.getElementById("btn-scan-page");
+  const btnOpenProofLab = document.getElementById("btn-open-proof-lab");
   const btnOpenDashboard = document.getElementById("btn-open-dashboard");
   const btnCopyPreview = document.getElementById("btn-copy-preview");
+  const scanMetaBar = document.getElementById("scan-meta-bar");
+  const scanIdDisplay = document.getElementById("scan-id-display");
+  const scanTimeDisplay = document.getElementById("scan-time-display");
 
   const findingsList = document.getElementById("findings-list");
   const previewText = document.getElementById("preview-text");
@@ -83,7 +87,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await checkBackendHealth();
 
-  // 4. Open Dashboard
+  // 4. Open Dashboard & Proof Lab
+  if (btnOpenProofLab) {
+    btnOpenProofLab.addEventListener("click", () => {
+      const url = `${BACKEND_URL}/#proof-lab`;
+      if (chrome.tabs && chrome.tabs.create) {
+        chrome.tabs.create({ url });
+      } else {
+        window.open(url, "_blank");
+      }
+    });
+  }
+
   btnOpenDashboard.addEventListener("click", () => {
     if (chrome.tabs && chrome.tabs.create) {
       chrome.tabs.create({ url: `${BACKEND_URL}/` });
@@ -151,6 +166,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
       });
       const sanitizeData = await sanitizeResp.json();
+
+      // Render scan ID & timestamp
+      if (scanData.scan_id && scanMetaBar) {
+        scanIdDisplay.innerText = scanData.scan_id;
+        scanTimeDisplay.innerText = new Date().toLocaleTimeString();
+        scanMetaBar.style.display = "flex";
+      }
 
       // Render findings
       const findings = scanData.findings || [];

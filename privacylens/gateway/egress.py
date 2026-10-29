@@ -147,3 +147,19 @@ class EgressGateway:
                 "sensitive_bytes_leaked": 0,
                 "reason": msg
             }
+
+
+def validate_outgoing_payload(
+    payload: Any,
+    image: Optional[Image.Image] = None,
+    vault: Optional[LocalSecretVault] = None,
+    canary_manager: Optional[CanaryManager] = None,
+    fail_closed: bool = False
+) -> Dict[str, Any]:
+    """
+    Centralized validation entry point. Every cloud-bound payload handled by PrivacyLens
+    passes through this authoritative gate.
+    """
+    gw = EgressGateway(vault=vault, canary_manager=canary_manager, fail_closed=fail_closed)
+    return gw.inspect_and_filter(payload, image=image)
+

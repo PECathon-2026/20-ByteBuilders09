@@ -25,6 +25,19 @@ except Exception:
     TESSERACT_AVAILABLE = False
 
 
+def is_ocr_available() -> bool:
+    """Returns True if pytesseract and OCR binary are functional on this host."""
+    if not TESSERACT_AVAILABLE:
+        return False
+    try:
+        # Quick probe with a 1x1 test image
+        test_img = Image.new("RGB", (30, 30), color=(255, 255, 255))
+        pytesseract.image_to_string(test_img)
+        return True
+    except Exception:
+        return False
+
+
 def extract_text_with_boxes(image: Image.Image) -> List[Dict[str, Any]]:
     """
     Extracts text tokens and pixel bounding boxes from an image.

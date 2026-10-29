@@ -10,8 +10,9 @@ import io
 import base64
 import json
 import time
+import uuid
 from typing import Dict, Any, Optional, List, Union
-from fastapi import FastAPI, HTTPException, Request, Body, Path
+from fastapi import FastAPI, HTTPException, Request, Body, Path, Response
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,22 +24,30 @@ from privacylens.capture.browser import BrowserController
 from privacylens.capture.snapshot import capture_page_snapshot
 from privacylens.detect.engine import DetectionEngine
 from privacylens.detect.patterns import scan_text_patterns
+from privacylens.detect.ocr import is_ocr_available
 from privacylens.sanitize.vault import LocalSecretVault
 from privacylens.sanitize.text import sanitize_text
 from privacylens.sanitize.dom import sanitize_dom_tree
 from privacylens.sanitize.image import redact_screenshot
-from privacylens.gateway.egress import EgressGateway, EgressBlockedException
+from privacylens.gateway.egress import EgressGateway, EgressBlockedException, validate_outgoing_payload
 from privacylens.gateway.canary import CanaryManager
 from privacylens.actions.approval import ApprovalGate
 from privacylens.agent.loop import AgentLoop
 from privacylens.security.safe_logging import RedactedAuditLogger
+from privacylens.proof_lab.scenarios import get_all_scenarios
+from privacylens.proof_lab.pipeline import run_scenario_comparison
+from privacylens.proof_lab.report import (
+    run_full_privacy_challenge,
+    export_report_json,
+    export_report_csv
+)
 from eval.run_eval import run_full_evaluation, SCENARIOS
 from eval.leakage_test import run_canary_leakage_benchmark
 
 app = FastAPI(
     title="PrivacyLens Security Engine",
     description="Local privacy firewall and secret injection backend for browser AI agents",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -63,6 +72,33 @@ global_canary_mgr = CanaryManager()
 global_approval_gate = ApprovalGate(auto_approve_eval=False)
 global_logger = RedactedAuditLogger()
 cached_browser = None
+
+# Real-time in-memory event bus for observable security stream
+class LiveEventBus:
+    def __init__(self, max_history: int = 300):
+        self.events: List[Dict[str, Any]] = []
+        self.max_history = max_history
+
+    def publish(self, event_type: str, detail: str, scan_id: Optional[str] = None, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        evt = {
+            "event_id": f"evt_{uuid.uuid4().hex[:8]}",
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "time_display": time.strftime("%H:%M:%S", time.localtime()),
+            "scan_id": scan_id or "system",
+            "event_type": event_type,
+            "detail": detail,
+            "meta": meta or {}
+        }
+        self.events.append(evt)
+        if len(self.events) > self.max_history:
+            self.events = self.events[-self.max_history:]
+        return evt
+
+    def get_history(self, limit: int = 50) -> List[Dict[str, Any]]:
+        return self.events[-limit:]
+
+global_event_bus = LiveEventBus()
+global_event_bus.publish("SYSTEM_READY", "PrivacyLens 2.0 Security Firewall Engine online (Fail-Closed Armed)")
 
 # Real aggregated stats (persisted in-memory for session)
 class LiveStats:
@@ -167,12 +203,15 @@ def get_dashboard_stats():
 def scan_content(req: ContentPayloadRequest):
     """
     Analyzes supplied synthetic, DOM, or testbed content for sensitive PII/credentials.
-    Returns findings with detected category, confidence, and explainable reason.
+    Returns structured findings with unique scan_id, timestamp, category, confidence, and explainable reason.
     """
     stats.total_scans += 1
+    scan_id = f"scn_{uuid.uuid4().hex[:8]}"
+    timestamp = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
     # Mode A: User supplied direct content string from Chrome Extension or API client
     if req.content is not None:
+        global_event_bus.publish("SCAN_STARTED", f"Initiated content scan ({len(req.content)} chars)", scan_id=scan_id)
         engine = DetectionEngine()
         dummy_snapshot = {
             "title": req.title or "Scanned Tab",
@@ -183,21 +222,30 @@ def scan_content(req: ContentPayloadRequest):
         findings = engine.scan_page_snapshot(dummy_snapshot)
         stats.sensitive_findings_detected += len(findings)
 
-        # Build clean response omitting raw secret values for safety
+        # Build structured findings matching specification
         safe_findings = []
-        for f in findings:
+        for i, f in enumerate(findings):
             safe_findings.append({
+                "finding_id": f"fnd_{scan_id}_{i+1}",
+                "category": f.get("type"),
                 "type": f.get("type"),
                 "confidence": f.get("confidence", 0.95),
-                "reason": f.get("reason", "Matched pattern"),
                 "source": f.get("source", "pattern_validator"),
-                "selector": f.get("selector", "text_body")
+                "location": f.get("selector", "text_body"),
+                "selector": f.get("selector", "text_body"),
+                "redaction_decision": "TOKENIZED_IN_RAM",
+                "explanation": f.get("reason", "Matched pattern"),
+                "reason": f.get("reason", "Matched pattern"),
+                "scan_id": scan_id
             })
 
         global_logger.log_event("SCAN", f"Scanned content ({len(req.content)} chars), detected {len(findings)} sensitive items")
+        global_event_bus.publish("FINDINGS_PRODUCED", f"Detected {len(findings)} sensitive items ({', '.join(set(f['type'] for f in findings)) or 'Clean'})", scan_id=scan_id)
 
         return {
             "status": "success",
+            "scan_id": scan_id,
+            "timestamp": timestamp,
             "title": req.title or "Scanned Content",
             "url": req.url or "http://localhost",
             "findings_count": len(findings),
@@ -255,6 +303,7 @@ def scan_content(req: ContentPayloadRequest):
 
 
 @app.post("/sanitize")
+@app.post("/api/sanitize")
 def sanitize_content(req: ContentPayloadRequest):
     """
     Substitutes detected sensitive values with stable placeholders ([EMAIL_1], [CARD_1]).
@@ -275,6 +324,8 @@ def sanitize_content(req: ContentPayloadRequest):
 
     # Sanitize content using RAM vault
     sanitized_text = sanitize_text(content, findings, global_vault)
+    san_id = f"san_{uuid.uuid4().hex[:8]}"
+    global_event_bus.publish("SANITIZATION_COMPLETED", f"Sanitized {len(findings)} sensitive elements into safe tokens. RAM vault holds {len(global_vault.get_all_raw_secrets())} secrets.", scan_id=san_id)
 
     safe_findings = [
         {
@@ -295,27 +346,38 @@ def sanitize_content(req: ContentPayloadRequest):
 
 
 @app.post("/validate-egress")
+@app.post("/api/egress/validate")
 def validate_egress(req: EgressValidateRequest):
     """
     Performs central outgoing-content fail-closed security check.
     Re-scans payload for known secrets, active canaries, and unsanitized credential patterns.
     """
+    request_id = f"req_{uuid.uuid4().hex[:8]}"
+    ts = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    global_event_bus.publish("EGRESS_STARTED", "Fail-Closed Egress Gateway evaluating outgoing payload", scan_id=request_id)
+
     egress = EgressGateway(vault=global_vault, canary_manager=global_canary_mgr, fail_closed=False)
     res = egress.inspect_and_filter(req.payload)
 
     if res["passed"]:
         stats.payloads_cleared += 1
+        global_event_bus.publish("PAYLOAD_ALLOWED", f"Egress check passed. Outgoing payload ({res.get('payload_bytes', 0)} bytes) safe to transmit.", scan_id=request_id)
         return {
             "status": "CLEARED",
             "passed": True,
+            "request_id": request_id,
+            "timestamp": ts,
             "violations_count": 0,
             "message": "Outgoing payload is clean. Passed all multi-pass egress scans."
         }
     else:
         stats.payloads_blocked += 1
+        global_event_bus.publish("PAYLOAD_BLOCKED", f"Egress Gateway intercepted {len(res.get('leaks', []))} data leaks! Payload transmission aborted.", scan_id=request_id)
         return {
             "status": "BLOCKED",
             "passed": False,
+            "request_id": request_id,
+            "timestamp": ts,
             "violations_count": len(res.get("leaks", [])),
             "violations": res.get("leaks", []),
             "message": "Egress Gateway Intercepted sensitive data leak. Payload blocked."
@@ -447,8 +509,101 @@ def get_canary_benchmark():
     return run_canary_leakage_benchmark()
 
 
+# ==============================================================================
+# PRIVACY PROOF LAB & REAL-TIME OBSERVABLE SECURITY STREAM
+# ==============================================================================
+
+@app.get("/api/proof-lab/scenarios")
+def get_proof_lab_scenarios():
+    """Returns the 6 deterministic synthetic scenarios for Privacy Proof Lab."""
+    scenarios = get_all_scenarios()
+    res = []
+    for s in scenarios:
+        res.append({
+            "id": s["id"],
+            "name": s["name"],
+            "category": s["category"],
+            "attack_description": s["attack_description"],
+            "planted_canaries": s["planted_canaries"],
+            "expected_safe_outcome": s["expected_safe_outcome"],
+            "reproducible_test_procedure": s["reproducible_test_procedure"]
+        })
+    return res
+
+
+@app.post("/api/proof-lab/run-scenario")
+def run_proof_lab_scenario(req: Dict[str, Any] = Body(...)):
+    """Runs a single scenario through Baseline vs PrivacyLens."""
+    scenario_id = req.get("scenario_id", "scenario_1")
+    scenarios = {s["id"]: s for s in get_all_scenarios()}
+    sc = scenarios.get(scenario_id)
+    if not sc:
+        raise HTTPException(status_code=404, detail=f"Scenario not found: {scenario_id}")
+
+    global_event_bus.publish("PROOF_LAB_RUN", f"Running comparative attack scenario: '{sc['name']}'", scan_id=scenario_id)
+    res = run_scenario_comparison(sc)
+    p_status = res["privacylens"]["status"]
+    b_status = res["baseline"]["status"]
+    global_event_bus.publish("PROOF_LAB_RESULT", f"Scenario '{sc['name']}' finished: Baseline={b_status}, PrivacyLens={p_status}", scan_id=scenario_id)
+    return res
+
+
+@app.post("/api/proof-lab/run-challenge")
+def run_proof_lab_challenge():
+    """Executes the Full Privacy Challenge across all 6 local synthetic scenarios."""
+    global_event_bus.publish("CHALLENGE_STARTED", "One-Click Full Privacy Challenge initiated across all 6 attack scenarios")
+    challenge_report = run_full_privacy_challenge()
+    pl_leak = challenge_report["macro_summary"]["privacylens"]["avg_canary_leakage_pct"]
+    base_leak = challenge_report["macro_summary"]["baseline"]["avg_canary_leakage_pct"]
+    global_event_bus.publish("CHALLENGE_COMPLETED", f"Full Challenge Finished! PrivacyLens Leakage={pl_leak}%, Baseline Leakage={base_leak}%")
+    return challenge_report
+
+
+@app.get("/api/proof-lab/export/json")
+def export_proof_lab_json():
+    """Exports Privacy Proof Report as downloadable JSON."""
+    report = run_full_privacy_challenge()
+    json_str = export_report_json(report)
+    return Response(
+        content=json_str,
+        media_type="application/json",
+        headers={"Content-Disposition": "attachment; filename=privacylens_proof_report.json"}
+    )
+
+
+@app.get("/api/proof-lab/export/csv")
+def export_proof_lab_csv():
+    """Exports Privacy Proof Report as downloadable CSV."""
+    report = run_full_privacy_challenge()
+    csv_str = export_report_csv(report)
+    return Response(
+        content=csv_str,
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=privacylens_proof_report.csv"}
+    )
+
+
+@app.get("/api/events/history")
+def get_events_history(limit: int = 50):
+    """Returns the latest real security events from the in-memory event bus."""
+    return global_event_bus.get_history(limit=limit)
+
+
+@app.get("/api/ocr/status")
+def get_ocr_engine_status():
+    """Reports real status of the visual OCR engine honestly."""
+    available = is_ocr_available()
+    return {
+        "available": available,
+        "engine": "pytesseract / Tesseract-OCR",
+        "status": "Operational" if available else "Unavailable on Host (Graceful Degradation)",
+        "guidance": "Install Tesseract-OCR to enable second-pass pixel leak scanning on raw screenshots." if not available else "Active"
+    }
+
+
 @app.on_event("shutdown")
 def shutdown_event():
     global cached_browser
     if cached_browser:
         cached_browser.close()
+

@@ -50,6 +50,17 @@ def detect_prompt_injections(text: str, nodes: List[Dict[str, Any]] = None) -> L
     return alerts
 
 
+def detect_prompt_injection(text: str, nodes: List[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """Helper returning boolean flag and first alert summary."""
+    alerts = detect_prompt_injections(text, nodes)
+    return {
+        "is_injection": len(alerts) > 0,
+        "alerts": alerts,
+        "matched_pattern": alerts[0]["type"] if alerts else None,
+        "reason": alerts[0]["reason"] if alerts else "No injection detected"
+    }
+
+
 def sanitize_injections(text: str) -> str:
     """Neutralizes detected adversarial prompt injection phrases from LLM input."""
     sanitized = text

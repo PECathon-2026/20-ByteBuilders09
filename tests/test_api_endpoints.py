@@ -132,3 +132,63 @@ def test_vault_clear_endpoint():
     data = clear_vault()
     assert data["status"] == "cleared"
     assert data["active_tokens"] == 0
+
+
+def test_proof_lab_api_endpoints():
+    from fastapi.testclient import TestClient
+    client = TestClient(app)
+
+    # 1. Scenarios list
+    r_sc = client.get("/api/proof-lab/scenarios")
+    assert r_sc.status_code == 200
+    scenarios = r_sc.json()
+    assert len(scenarios) == 6
+
+    # 2. Run single scenario
+    r_run = client.post("/api/proof-lab/run-scenario", json={"scenario_id": "scenario_2"})
+    assert r_run.status_code == 200
+    run_data = r_run.json()
+    assert run_data["scenario_id"] == "scenario_2"
+    assert "baseline" in run_data
+    assert "privacylens" in run_data
+
+    # 3. Export JSON & CSV
+    r_json = client.get("/api/proof-lab/export/json")
+    assert r_json.status_code == 200
+    assert r_json.headers["content-type"] == "application/json"
+
+    r_csv = client.get("/api/proof-lab/export/csv")
+    assert r_csv.status_code == 200
+    assert "text/csv" in r_csv.headers["content-type"]
+
+
+def test_events_and_ocr_endpoints():
+    from fastapi.testclient import TestClient
+    client = TestClient(app)
+
+    # Events history
+    r_ev = client.get("/api/events/history")
+    assert r_ev.status_code == 200
+    ev_list = r_ev.json()
+    assert isinstance(ev_list, list)
+    assert len(ev_list) >= 1
+
+    # OCR status
+    r_ocr = client.get("/api/ocr/status")
+    assert r_ocr.status_code == 200
+    ocr_data = r_ocr.json()
+    assert "available" in ocr_data
+    assert "engine" in ocr_data
+
+
+def test_egress_api_alias_endpoint():
+    from fastapi.testclient import TestClient
+    client = TestClient(app)
+
+    clean_payload = {"action": "type", "value": "[CARD_1]"}
+    r = client.post("/api/egress/validate", json={"payload": clean_payload})
+    assert r.status_code == 200
+    data = r.json()
+    assert data["status"] == "CLEARED"
+    assert data["passed"] is True
+

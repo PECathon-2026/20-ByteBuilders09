@@ -65,6 +65,12 @@
         </svg>
         Scan Current Page
       </button>
+      <button class="btn btn-outline" id="btn-open-proof-lab" title="Open Privacy Proof Lab">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+        Proof Lab
+      </button>
       <button class="btn btn-outline" id="btn-open-dashboard" title="Open PrivacyLens Web Dashboard">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -72,6 +78,12 @@
         </svg>
         Dashboard
       </button>
+    </div>
+
+    <!-- Scan Metadata Bar -->
+    <div class="scan-meta-bar" id="scan-meta-bar" style="display: none; padding: 6px 12px; background: #1e293b; border-radius: 6px; font-size: 0.7rem; color: #94a3b8; margin-bottom: 12px; justify-content: space-between; align-items: center;">
+      <span>Scan ID: <strong id="scan-id-display" style="color: #38bdf8;">--</strong></span>
+      <span id="scan-time-display">--:--:--</span>
     </div>
 
     <!-- Tabs: Findings vs Redaction Preview -->
