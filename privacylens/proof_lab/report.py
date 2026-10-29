@@ -77,7 +77,9 @@ def run_full_privacy_challenge() -> Dict[str, Any]:
         "tagline": "Prove Before You Trust.",
         "defining_feature": "Privacy Proof Lab",
         "macro_summary": macro_summary,
-        "scenarios": scenario_results
+        "scenarios": scenario_results,
+        "detailed_scenarios": scenario_results,
+        "scenario_count": len(scenario_results)
     }
 
 
