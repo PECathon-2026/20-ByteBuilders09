@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+*.pem
+secrets.json
+
+# Node & Next.js
+node_modules/
+.npm/
+.next/
+out/
+build/
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+*.class
+venv/
+env/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# OS/Editor
+.DS_Store
+.vscode/

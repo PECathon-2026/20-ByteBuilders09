@@ -1,0 +1,46 @@
+# =========================
+# 1. Environment & Secrets (CRITICAL)
+# =========================
+.env
+.env.*
+*.pem
+secrets.json
+
+# =========================
+# 2. Node.js & Next.js (Dashboard & Agent Core)
+# =========================
+node_modules/
+.npm/
+.next/
+out/
+build/
+dist/
+.eslintcache
+npm-debug.log*
+
+# =========================
+# 3. Python (Privacy Engine)
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.pytest_cache/
+.coverage
+
+# =========================
+# 4. Playwright Browser Artifacts
+# =========================
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# =========================
+# 5. OS & Editor Configs
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
