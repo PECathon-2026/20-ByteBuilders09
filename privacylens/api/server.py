@@ -583,11 +583,22 @@ def start_live_protection(req: ProtectionSessionRequest):
 
     # Stage 1: SCANNING
     target_name = req.scenario or "checkout.html"
-    if req.custom_text:
-        target_name = "Custom User Text / Payload"
+    if req.custom_url and (req.custom_url.startswith("http://") or req.custom_url.startswith("https://")):
+        try:
+            import requests
+            resp = requests.get(req.custom_url, timeout=10, headers={"User-Agent": "PrivacyLens-Agent/2.0"})
+            raw_text = resp.text
+            page_title = f"Live Web: {req.custom_url[:40]}"
+            target_url = req.custom_url
+        except Exception as e:
+            raw_text = f"Live fetch failed for {req.custom_url}: {str(e)}"
+            page_title = "Fetch Error"
+            target_url = req.custom_url
+    elif req.custom_text:
+        target_name = "Live User Input Challenge"
         raw_text = req.custom_text
-        page_title = "User Input Session"
-        target_url = req.custom_url or "http://localhost/custom"
+        page_title = "Live Judge / User Input Session"
+        target_url = req.custom_url or "http://localhost/live-input"
     else:
         full_path = os.path.join(PAGES_DIR, target_name)
         if os.path.exists(full_path):
@@ -849,6 +860,73 @@ def test_firewall_canary(req: CanaryTestRequest):
             "message": "Canary tokenized in RAM vault. Zero canaries leaked to outgoing payload.",
             "session_id": session_id
         }
+
+
+# ==============================================================================
+# DYNAMIC RANDOM SYNTHETIC DATA GENERATOR (FOR LIVE JUDGE TESTING)
+# ==============================================================================
+
+@app.get("/api/synthetic/random")
+def get_random_synthetic_payload(category: Optional[str] = "mixed"):
+    """
+    Generates 100% fresh, random, cryptographically valid sensitive test data:
+    - Verhoeff-valid Indian Aadhaar
+    - Luhn-valid Credit Cards (Visa/Mastercard/Amex/RuPay) with CVV
+    - Valid Indian PAN numbers
+    - Valid UPI VPA handles & IFSC
+    - E.164 phone numbers, passwords, API keys, and internal IPs
+    """
+    from testbed.synthetic_data import (
+        generate_aadhaar,
+        generate_pan,
+        generate_credit_card,
+        generate_upi,
+        generate_ifsc,
+        generate_indian_phone,
+        generate_api_key
+    )
+    import random
+
+    first_names = ["Aarav", "Priya", "Vikram", "Ananya", "Rohan", "Sneha", "Kabir", "Neha", "Arjun", "Kavya"]
+    last_names = ["Sharma", "Patel", "Verma", "Iyer", "Kulkarni", "Reddy", "Mehta", "Singh", "Nair", "Bose"]
+    name = f"{random.choice(first_names)} {random.choice(last_names)}"
+    domain = random.choice(["gmail.com", "outlook.com", "company.internal", "securemail.test"])
+    email = f"{name.lower().replace(' ', '.')}{random.randint(10, 99)}@{domain}"
+
+    card = generate_credit_card(random.choice(["visa", "mastercard", "amex", "rupay"]))
+    aadhaar = generate_aadhaar(formatted=True)
+    pan = generate_pan("P")
+    upi = generate_upi(name.lower().replace(" ", "_"))
+    ifsc = generate_ifsc()
+    phone = generate_indian_phone()
+    api_key = generate_api_key(random.choice(["openai", "aws", "stripe"]))
+    password = f"{random.choice(['Alpha', 'Delta', 'Vault', 'Cipher', 'Guard'])}!{random.randint(100, 999)}#{random.choice(['X', 'Z', 'Q', 'W'])}"
+    internal_ip = f"192.168.{random.randint(1, 20)}.{random.randint(10, 250)}"
+
+    if category == "identity":
+        text = f"Government Identity Verification for {name}:\nIndian Aadhaar ID: {aadhaar}\nIncome Tax PAN: {pan}\nContact Email: {email}\nMobile: {phone}"
+    elif category == "financial":
+        text = f"Billing & Payment Invoice for {name}:\nCard Number: {card['number']} (Expiry: {card['expiry']}, CVV: {card['cvv']})\nUPI Refund Handle: {upi} (Bank IFSC: {ifsc})\nBilling PAN: {pan}"
+    elif category == "credentials":
+        text = f"Corporate Account Provisioning for {name}:\nWork Email: {email}\nTemporary Password: {password}\nRegistered Phone: {phone}\nInternal Server IP: {internal_ip}"
+    elif category == "developer":
+        text = f"Production Infrastructure Secrets:\nAPI Key: {api_key}\nInternal Database Endpoint: {internal_ip}:5432\nOperator Contact: {email}"
+    else:
+        text = f"Customer Profile & Payment Record:\nName: {name}\nContact: {email} | Phone: {phone}\nAadhaar Number: {aadhaar}\nPAN Card: {pan}\nCredit Card: {card['number']} (CVV: {card['cvv']}, Exp: {card['expiry']})\nUPI Handle: {upi}\nAccount Password: {password}"
+
+    return {
+        "text": text,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "aadhaar": aadhaar,
+        "pan": pan,
+        "card": card["number"],
+        "cvv": card["cvv"],
+        "upi": upi,
+        "api_key": api_key,
+        "password": password
+    }
 
 
 # ==============================================================================

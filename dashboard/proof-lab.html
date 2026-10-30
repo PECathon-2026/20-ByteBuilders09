@@ -5,12 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Proof Lab — PrivacyLens 2.0</title>
   
-  <!-- Red Sun Typography -->
+  <!-- High-Fidelity Claymorphism Typography (Nunito + DM Sans + JetBrains Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=JetBrains+Mono:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=3.1">
+
+  <!-- Immediate Zero-FOUC Theme Initializer -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem("privacylens_theme");
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (saved === "dark" || (!saved && prefersDark)) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+    })();
+  </script>
 </head>
 <body>
   <!-- Ambient Depth Blurs -->
@@ -37,6 +50,15 @@
     </ul>
 
     <div class="nav-cta-group">
+      <button class="btn btn-sm btn-outline btn-theme-toggle" id="btn-theme-toggle" aria-label="Toggle Theme" title="Toggle Light / Dark Clay Theme" style="height:36px; padding:0 12px;">
+        <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <span class="theme-label" id="theme-label" style="font-size:0.75rem;">Theme</span>
+      </button>
       <div class="trust-badge-pill">
         <span class="pulse-dot"></span>
         Fail-Closed Armed
@@ -76,7 +98,7 @@
           Type or paste <strong>ANY custom text</strong> with Indian Aadhaar, PAN, Cards, UPI, Phone, Email, Password, or Prompt Injections to watch the firewall process it live:
         </div>
 
-        <textarea id="live-input-text" rows="4" style="width: 100%; box-sizing: border-box; padding: 14px 18px; font-family: var(--font-mono); font-size: 0.875rem; border-radius: var(--radius-sm); border: 1.5px solid #CBD5E1; background: #FFFFFF; color: var(--secondary); outline: none; resize: vertical;" placeholder="Enter custom text to evaluate live, e.g. Customer Aadhaar 4357 9307 3000, PAN ABCPA1234D, Card 4529 7025 3275 9417, UPI amit@okaxis...">Customer order #8841: Indian Aadhaar ID 4357 9307 3000, PAN Number ABCPA1234D, Card 4529 7025 3275 9417, UPI handle vikram.sharma@okaxis, phone +91 98765 43210. Please send invoice to customer@secure.test.</textarea>
+        <textarea id="live-input-text" rows="4" style="width: 100%; box-sizing: border-box; padding: 14px 18px; font-family: var(--font-mono); font-size: 0.875rem; border-radius: var(--radius-sm); border: 1.5px solid var(--border-subtle); background: var(--bg-input); color: var(--text-main); outline: none; resize: vertical;" placeholder="Enter custom text to evaluate live, e.g. Customer Aadhaar 4357 9307 3000, PAN ABCPA1234D, Card 4529 7025 3275 9417, UPI amit@okaxis...">Customer order #8841: Indian Aadhaar ID 4357 9307 3000, PAN Number ABCPA1234D, Card 4529 7025 3275 9417, UPI handle vikram.sharma@okaxis, phone +91 98765 43210. Please send invoice to customer@secure.test.</textarea>
 
         <!-- Presets Row -->
         <div style="display: flex; gap: 8px; align-items: center; margin: 12px 0 18px; flex-wrap: wrap;">
@@ -288,6 +310,31 @@
     </div>
   </footer>
 
-  <script src="/static/proof-lab.js"></script>
+  <script src="/static/proof-lab.js?v=3.0"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const btn = document.getElementById("btn-theme-toggle");
+      const label = document.getElementById("theme-label");
+      function updateLabel() {
+        const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        if (label) label.innerText = isDark ? "Light" : "Dark";
+      }
+      updateLabel();
+      if (btn) {
+        btn.addEventListener("click", function() {
+          const current = document.documentElement.getAttribute("data-theme");
+          const next = current === "dark" ? "light" : "dark";
+          if (next === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+          }
+          localStorage.setItem("privacylens_theme", next);
+          updateLabel();
+        });
+      }
+    });
+  </script>
 </body>
 </html>

@@ -56,6 +56,8 @@
       btnQuickRunTest.addEventListener("click", () => navigateTo("/test-lab"));
     }
 
+    initThemeToggle();
+
     // Initial Route
     const initialPath = window.location.pathname + window.location.search;
     handleRoute(initialPath, false);
@@ -219,7 +221,7 @@
           </div>
           <div class="kpi-box">
             <div class="kpi-box-label">Sensitive Items Detected</div>
-            <div class="kpi-box-num" style="color: #D97706;">${totalDetected}</div>
+            <div class="kpi-box-num text-warning">${totalDetected}</div>
             <div class="kpi-box-sub">${hasData ? "Aadhaar, PAN, Cards, OTPs, Keys" : "Awaiting scan input"}</div>
           </div>
           <div class="kpi-box">
@@ -273,27 +275,27 @@
             <span class="badge badge-primary">FAIL-CLOSED ENABLED</span>
           </div>
           <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
-              <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px;">
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                 <span class="pulse-dot"></span> Local Volatile RAM Vault
               </div>
-              <div style="font-size: 0.8125rem; color: #64748B;">
+              <div style="font-size: 0.8125rem; color: var(--text-muted);">
                 Sensitive credentials reside strictly in process RAM. Zero disk storage, zero logging, zero persistence across reboots.
               </div>
             </div>
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
-              <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px;">
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                 <span class="pulse-dot"></span> Fail-Closed Egress Gateway
               </div>
-              <div style="font-size: 0.8125rem; color: #64748B;">
+              <div style="font-size: 0.8125rem; color: var(--text-muted);">
                 Every outbound payload is re-scanned for raw secrets and canary markers. Any leak triggers an immediate transmission abort.
               </div>
             </div>
-            <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 16px;">
-              <div style="font-weight: 700; color: #0F172A; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 16px;">
+              <div style="font-weight: 700; color: var(--text-main); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
                 <span class="pulse-dot"></span> Indian Checksum Validators
               </div>
-              <div style="font-size: 0.8125rem; color: #64748B;">
+              <div style="font-size: 0.8125rem; color: var(--text-muted);">
                 Algorithmic validation for Aadhaar (Verhoeff dihedral), PAN, UPI VPA handles, IFSC bank codes, and Luhn credit cards.
               </div>
             </div>
@@ -311,7 +313,7 @@
           </div>
           <div class="event-stream-container" style="max-height: 240px;">
             ${events.length === 0 ? `
-              <div style="color: #94A3B8; text-align: center; padding: 20px;">No events logged yet. System online.</div>
+              <div style="color: var(--text-muted); text-align: center; padding: 20px;">No events logged yet. System online.</div>
             ` : events.map(ev => `
               <div class="event-item">
                 <span class="event-time">${escapeHtml(ev.time_display || ev.timestamp)}</span>
@@ -333,7 +335,7 @@
       appContent.innerHTML = `
         <div class="saas-card">
           <div class="empty-state-box">
-            <div class="empty-state-title" style="color: #DC2626;">Failed to load overview data</div>
+            <div class="empty-state-title" style="color: var(--status-danger);">Failed to load overview data</div>
             <div class="empty-state-desc">${escapeHtml(e.message)}</div>
             <button class="btn btn-primary" onclick="window.location.reload()">Retry</button>
           </div>
@@ -357,6 +359,8 @@
   // PAGE 2: LIVE PROTECTION (Controlled Webpage AI Agent Pipeline)
   // =========================================================================
 
+  let activeProtectionMode = "LIVE_INPUT"; // "LIVE_INPUT" | "LIVE_URL" | "TESTBED_SCENARIO"
+
   function renderProtectionPage() {
     appContent.innerHTML = `
       <!-- Control Panel Card -->
@@ -366,11 +370,61 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
             Live Target & AI Task Configuration
           </div>
-          <span class="badge badge-primary">CONTROLLED AGENT WORKFLOW</span>
+          <span class="badge badge-success">LIVE INTERACTIVE EXECUTION</span>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- Target Selector -->
+        <!-- 3 Prominent Source Selection Tabs -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+          <button class="btn btn-sm ${activeProtectionMode === 'LIVE_INPUT' ? 'btn-primary' : 'btn-outline'}" id="tab-mode-live-input">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            1. Live Judge Input (Type Any Secrets Live)
+          </button>
+          <button class="btn btn-sm ${activeProtectionMode === 'LIVE_URL' ? 'btn-primary' : 'btn-outline'}" id="tab-mode-live-url">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            2. Live Internet URL (Real Webpage Fetch)
+          </button>
+          <button class="btn btn-sm ${activeProtectionMode === 'TESTBED_SCENARIO' ? 'btn-primary' : 'btn-outline'}" id="tab-mode-scenario">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            3. Controlled Testbed Scenarios
+          </button>
+        </div>
+
+        <!-- MODE 1: LIVE JUDGE INPUT CHALLENGE -->
+        <div id="section-live-input" style="${activeProtectionMode === 'LIVE_INPUT' ? 'display: block;' : 'display: none;'}">
+          <div class="form-group-saas">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+              <label class="form-label-saas" style="margin-bottom: 0;">Type live text or click to generate random cryptographically valid data:</label>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                <button class="btn btn-sm btn-primary" id="btn-generate-random-pii">
+                  🎲 Generate Random Sensitive Data
+                </button>
+                <button class="btn btn-sm btn-outline btn-quick-seed" data-seed="identity">Random Aadhaar + PAN</button>
+                <button class="btn btn-sm btn-outline btn-quick-seed" data-seed="financial">Random Card + UPI</button>
+                <button class="btn btn-sm btn-outline btn-quick-seed" data-seed="credentials">Random Password + Email</button>
+                <button class="btn btn-sm btn-outline btn-quick-seed" data-seed="developer">Random API Keys</button>
+              </div>
+            </div>
+            <textarea class="form-input-saas" id="prot-custom-content" rows="4" style="font-family: var(--font-mono); font-size: 0.8125rem;" placeholder="Type any live text right now, or click '🎲 Generate Random Sensitive Data' above to populate fresh numbers with real checksums..."></textarea>
+          </div>
+        </div>
+
+        <!-- MODE 2: LIVE INTERNET URL FETCH -->
+        <div id="section-live-url" style="${activeProtectionMode === 'LIVE_URL' ? 'display: block;' : 'display: none;'}">
+          <div class="form-group-saas">
+            <label class="form-label-saas">Enter any real website URL to scan & protect live:</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="url" class="form-input-saas" id="prot-live-url-input" value="https://news.ycombinator.com" placeholder="https://example.com or any real URL">
+              <button class="btn btn-outline" id="btn-sample-url-hn">HackerNews</button>
+              <button class="btn btn-outline" id="btn-sample-url-wiki">Wikipedia</button>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+              PrivacyLens will fetch the live webpage over HTTP, scan its DOM content, and sanitize sensitive elements before forwarding to the AI.
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 3: CONTROLLED TESTBED SCENARIOS -->
+        <div id="section-scenario" style="${activeProtectionMode === 'TESTBED_SCENARIO' ? 'display: block;' : 'display: none;'}">
           <div class="form-group-saas">
             <label class="form-label-saas" for="prot-scenario-select">Select Controlled Webpage Scenario:</label>
             <select class="form-select-saas" id="prot-scenario-select">
@@ -379,33 +433,26 @@
               <option value="support.html">Customer Support Portal (Phones, UPI ID, Aadhaar, Private Chat)</option>
               <option value="devsettings.html">InfraConsole Secrets (API Keys, AWS Credentials, Internal IPs)</option>
               <option value="video.html">MeetSecure Video Bridge (Participant Identifiers, Media Tokens)</option>
-              <option value="CUSTOM_TEXT">Custom User Input / Payload (Live Test)</option>
             </select>
           </div>
-
-          <!-- Task Goal -->
-          <div class="form-group-saas">
-            <label class="form-label-saas" for="prot-task-goal">AI Browser Agent Task Goal:</label>
-            <input type="text" class="form-input-saas" id="prot-task-goal" value="Complete order payment without leaking credit card credentials">
-          </div>
         </div>
 
-        <!-- Custom Text Input (Shown when CUSTOM_TEXT is selected) -->
-        <div class="form-group-saas" id="custom-input-group" style="display: none;">
-          <label class="form-label-saas" for="prot-custom-content">Custom Webpage Content or Payload:</label>
-          <textarea class="form-input-saas" id="prot-custom-content" rows="3" placeholder="Enter custom content containing Aadhaar, PAN, phone, email, card numbers, or passwords..."></textarea>
+        <!-- Task Goal -->
+        <div class="form-group-saas" style="margin-top: 14px;">
+          <label class="form-label-saas" for="prot-task-goal">AI Browser Agent Task Goal:</label>
+          <input type="text" class="form-input-saas" id="prot-task-goal" value="Inspect page and safely interact without leaking sensitive credentials">
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" id="prot-run-agent" checked style="width: 16px; height: 16px;">
-            <label for="prot-run-agent" style="font-size: 0.8125rem; font-weight: 600; color: #334155; cursor: pointer;">
+            <label for="prot-run-agent" style="font-size: 0.8125rem; font-weight: 600; color: var(--text-main); cursor: pointer;">
               Execute AI Agent Reasoning & Local RAM Secret Injection
             </label>
           </div>
-          <button class="btn btn-primary" id="btn-start-protection">
+          <button class="btn btn-primary" id="btn-start-protection" style="padding: 10px 22px; font-size: 0.9375rem;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Start Protection Session
+            Execute Live Protection
           </button>
         </div>
       </div>
@@ -434,36 +481,92 @@
             </div>
             <div class="empty-state-title">Ready for Live Protection</div>
             <div class="empty-state-desc">
-              Select a target scenario above and click <strong>"Start Protection Session"</strong> to run the local detection, vault tokenization, egress firewall verification, and AI reasoning.
+              Type any live input, enter a real website URL, or select a scenario above and click <strong>"Execute Live Protection"</strong> to run the local detection, vault tokenization, egress firewall verification, and AI reasoning.
             </div>
           </div>
         </div>
       </div>
     `;
 
-    // Dropdown toggle for custom text
-    const scenarioSelect = document.getElementById("prot-scenario-select");
-    const customGroup = document.getElementById("custom-input-group");
+    // Tab Switching Logic
+    const tabInput = document.getElementById("tab-mode-live-input");
+    const tabUrl = document.getElementById("tab-mode-live-url");
+    const tabScen = document.getElementById("tab-mode-scenario");
+
+    const secInput = document.getElementById("section-live-input");
+    const secUrl = document.getElementById("section-live-url");
+    const secScen = document.getElementById("section-scenario");
     const taskGoalInput = document.getElementById("prot-task-goal");
 
-    scenarioSelect.addEventListener("change", () => {
-      if (scenarioSelect.value === "CUSTOM_TEXT") {
-        customGroup.style.display = "block";
-        taskGoalInput.value = "Inspect and sanitize custom payload";
+    function setTab(mode) {
+      activeProtectionMode = mode;
+      tabInput.className = `btn btn-sm ${mode === 'LIVE_INPUT' ? 'btn-primary' : 'btn-outline'}`;
+      tabUrl.className = `btn btn-sm ${mode === 'LIVE_URL' ? 'btn-primary' : 'btn-outline'}`;
+      tabScen.className = `btn btn-sm ${mode === 'TESTBED_SCENARIO' ? 'btn-primary' : 'btn-outline'}`;
+
+      secInput.style.display = mode === 'LIVE_INPUT' ? 'block' : 'none';
+      secUrl.style.display = mode === 'LIVE_URL' ? 'block' : 'none';
+      secScen.style.display = mode === 'TESTBED_SCENARIO' ? 'block' : 'none';
+
+      if (mode === 'LIVE_INPUT') {
+        taskGoalInput.value = "Inspect live text, sanitize credentials, and plan next safe action";
+      } else if (mode === 'LIVE_URL') {
+        taskGoalInput.value = "Fetch live website DOM and sanitize sensitive content before AI processing";
       } else {
-        customGroup.style.display = "none";
-        if (scenarioSelect.value === "checkout.html") {
-          taskGoalInput.value = "Complete order payment without leaking credit card credentials";
-        } else if (scenarioSelect.value === "login.html") {
-          taskGoalInput.value = "Authenticate with corporate credentials and verify 2FA OTP";
-        } else if (scenarioSelect.value === "support.html") {
-          taskGoalInput.value = "Process customer refund without exposing Aadhaar or UPI";
-        } else if (scenarioSelect.value === "devsettings.html") {
-          taskGoalInput.value = "Audit cluster environment variables without transmitting API secrets";
-        } else if (scenarioSelect.value === "video.html") {
-          taskGoalInput.value = "Mute audio and verify participant permissions safely";
+        taskGoalInput.value = "Complete order payment without leaking credit card credentials";
+      }
+    }
+
+    tabInput.addEventListener("click", () => setTab("LIVE_INPUT"));
+    tabUrl.addEventListener("click", () => setTab("LIVE_URL"));
+    tabScen.addEventListener("click", () => setTab("TESTBED_SCENARIO"));
+
+    // Random Data Generator for Live Judge Challenge
+    const customContentArea = document.getElementById("prot-custom-content");
+    const btnGenRandom = document.getElementById("btn-generate-random-pii");
+
+    async function fetchRandomSynthetic(category = "mixed") {
+      try {
+        if (btnGenRandom) {
+          btnGenRandom.innerHTML = `<svg class="spin-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"/></svg> Generating...`;
+        }
+        const resp = await fetch(`/api/synthetic/random?category=${category}`);
+        if (resp.ok) {
+          const data = await resp.json();
+          customContentArea.value = data.text;
+        }
+      } catch (e) {
+        console.error("Failed to generate random data", e);
+      } finally {
+        if (btnGenRandom) {
+          btnGenRandom.innerHTML = `🎲 Generate Random Sensitive Data`;
         }
       }
+    }
+
+    if (btnGenRandom) {
+      btnGenRandom.addEventListener("click", () => fetchRandomSynthetic("mixed"));
+    }
+
+    document.querySelectorAll(".btn-quick-seed").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const seedType = btn.getAttribute("data-seed");
+        fetchRandomSynthetic(seedType);
+      });
+    });
+
+    // Populate with one random set on first render if empty
+    if (customContentArea && !customContentArea.value.trim()) {
+      fetchRandomSynthetic("mixed");
+    }
+
+    // Sample URL buttons
+    const urlInput = document.getElementById("prot-live-url-input");
+    document.getElementById("btn-sample-url-hn").addEventListener("click", () => {
+      urlInput.value = "https://news.ycombinator.com";
+    });
+    document.getElementById("btn-sample-url-wiki").addEventListener("click", () => {
+      urlInput.value = "https://en.wikipedia.org/wiki/Data_privacy";
     });
 
     // Start Button
@@ -472,10 +575,31 @@
 
   async function executeLiveProtection() {
     const btn = document.getElementById("btn-start-protection");
-    const scenarioSelect = document.getElementById("prot-scenario-select");
     const taskGoal = document.getElementById("prot-task-goal").value;
     const runAgent = document.getElementById("prot-run-agent").checked;
-    const customContent = document.getElementById("prot-custom-content") ? document.getElementById("prot-custom-content").value : "";
+
+    let payload = {
+      task_goal: taskGoal,
+      run_agent: runAgent
+    };
+
+    if (activeProtectionMode === "LIVE_INPUT") {
+      const customContent = document.getElementById("prot-custom-content").value;
+      if (!customContent.trim()) {
+        alert("Please enter some text or click one of the quick seed pills above!");
+        return;
+      }
+      payload.custom_text = customContent;
+    } else if (activeProtectionMode === "LIVE_URL") {
+      const urlVal = document.getElementById("prot-live-url-input").value;
+      if (!urlVal.trim()) {
+        alert("Please enter a valid website URL!");
+        return;
+      }
+      payload.custom_url = urlVal.trim();
+    } else {
+      payload.scenario = document.getElementById("prot-scenario-select").value;
+    }
 
     btn.disabled = true;
     btn.innerHTML = `
@@ -492,13 +616,6 @@
     setStageStatus("step-complete", "");
 
     try {
-      const payload = {
-        scenario: scenarioSelect.value === "CUSTOM_TEXT" ? null : scenarioSelect.value,
-        task_goal: taskGoal,
-        custom_text: scenarioSelect.value === "CUSTOM_TEXT" ? customContent : null,
-        run_agent: runAgent
-      };
-
       const resp = await fetch("/api/protection/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -536,7 +653,7 @@
       btn.disabled = false;
       btn.innerHTML = `
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Start Protection Session
+        Execute Live Protection
       `;
     }
   }
@@ -576,7 +693,7 @@
         <!-- Left: Raw Input -->
         <div class="evidence-pane">
           <div class="evidence-pane-header">
-            <span style="color: #DC2626;">1. RAW CAPTURED INPUT</span>
+            <span style="color: var(--status-danger);">1. RAW CAPTURED INPUT</span>
             <span class="badge badge-danger">${data.findings_count} Sensitive Items</span>
           </div>
           <div class="evidence-code-body">${rawFormatted}</div>
@@ -585,7 +702,7 @@
         <!-- Middle: Sanitized Output -->
         <div class="evidence-pane">
           <div class="evidence-pane-header">
-            <span style="color: #059669;">2. SANITIZED PAYLOAD</span>
+            <span style="color: var(--status-success);">2. SANITIZED PAYLOAD</span>
             <span class="badge badge-success">RAM TOKENIZED</span>
           </div>
           <div class="evidence-code-body">${sanFormatted}</div>
@@ -594,19 +711,19 @@
         <!-- Right: AI Agent Decision -->
         <div class="evidence-pane">
           <div class="evidence-pane-header">
-            <span style="color: #0284C7;">3. AI AGENT REASONING & ACTIONS</span>
+            <span style="color: var(--accent-cyan);">3. AI AGENT REASONING & ACTIONS</span>
             <span class="badge badge-primary">LOCAL INJECTION</span>
           </div>
           <div class="evidence-code-body" style="font-family: var(--font-body); font-size: 0.8125rem;">
             ${(data.agent_steps || []).length === 0 ? `
-              <div style="color: #94A3B8;">No agent actions executed.</div>
+              <div style="color: var(--text-muted);">No agent actions executed.</div>
             ` : data.agent_steps.map(step => `
-              <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-bottom: 12px;">
-                <div style="font-weight: 700; color: #0F172A; margin-bottom: 6px;">Step ${step.step}: Action Proposed</div>
-                <div style="font-family: var(--font-mono); font-size: 0.75rem; background: #FFFFFF; border: 1px solid #E2E8F0; padding: 6px 10px; border-radius: 6px; margin-bottom: 8px;">
+              <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                <div style="font-weight: 700; color: var(--text-main); margin-bottom: 6px;">Step ${step.step}: Action Proposed</div>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; background: var(--bg-code); color: var(--text-cyan); border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">
                   ${escapeHtml(JSON.stringify(step.action_proposed, null, 2))}
                 </div>
-                <div style="font-size: 0.75rem; color: #475569; line-height: 1.5;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
                   <strong>Action Validator:</strong> <span class="text-success">${step.validation}</span><br>
                   <strong>Secret Injection:</strong> ${step.local_secret_injected ? '<span class="text-success">Resolved in volatile RAM locally</span>' : 'None required'}<br>
                   <strong>Cloud Transmission:</strong> <span class="text-success">0 Sensitive Bytes Exposed</span>
@@ -709,7 +826,7 @@
 
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
             <div style="display: flex; align-items: center; gap: 12px; flex-grow: 1;">
-              <label for="evidence-session-select" style="font-size: 0.8125rem; font-weight: 700; color: #334155; white-space: nowrap;">
+              <label for="evidence-session-select" style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main); white-space: nowrap;">
                 Inspect Session:
               </label>
               <select class="form-select-saas" id="evidence-session-select" style="max-width: 550px;">
@@ -720,7 +837,7 @@
                 `).join("")}
               </select>
             </div>
-            <div style="font-size: 0.75rem; color: #64748B;">
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
               Session ID: <code>${escapeHtml(sessionData.session_id)}</code> • ${escapeHtml(sessionData.timestamp)}
             </div>
           </div>
@@ -731,7 +848,7 @@
           <!-- LEFT PANEL: RAW PAYLOAD -->
           <div class="evidence-pane">
             <div class="evidence-pane-header">
-              <span style="color: #DC2626;">RAW PAYLOAD (Actual Input Data)</span>
+              <span style="color: var(--status-danger);">RAW PAYLOAD (Actual Input Data)</span>
               <span class="badge badge-danger">${sessionData.total_detected} SENSITIVE VALUES DETECTED</span>
             </div>
             <div class="evidence-code-body">${rawText || "<em>No payload captured</em>"}</div>
@@ -740,7 +857,7 @@
           <!-- RIGHT PANEL: SANITIZED PAYLOAD -->
           <div class="evidence-pane">
             <div class="evidence-pane-header">
-              <span style="color: #059669;">SANITIZED PAYLOAD (Actual Output Sent to AI)</span>
+              <span style="color: var(--status-success);">SANITIZED PAYLOAD (Actual Output Sent to AI)</span>
               <span class="badge badge-success">${sessionData.total_redacted} VALUES REDACTED</span>
             </div>
             <div class="evidence-code-body">${sanText || "<em>No sanitized output</em>"}</div>
@@ -787,7 +904,7 @@
             </span>
           </div>
 
-          <p style="font-size: 0.875rem; color: #475569; margin-bottom: 16px;">
+          <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 16px;">
             The Egress Gateway inspects every outgoing payload for raw secrets and active canaries.
             If an unredacted canary appears in the outbound stream, transmission is halted immediately with fail-closed semantics.
           </p>
@@ -801,7 +918,7 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
               Test Fail-Closed Firewall (Inject Deliberate Leak)
             </button>
-            <div style="font-size: 0.8125rem; color: #64748B;" id="canary-test-feedback">
+            <div style="font-size: 0.8125rem; color: var(--text-muted);" id="canary-test-feedback">
               Processing time: <strong>${sessionData.latency_ms} ms</strong>
             </div>
           </div>
@@ -827,7 +944,7 @@
       appContent.innerHTML = `
         <div class="saas-card">
           <div class="empty-state-box">
-            <div class="empty-state-title" style="color: #DC2626;">Error Loading Evidence</div>
+            <div class="empty-state-title" style="color: var(--status-danger);">Error Loading Evidence</div>
             <div class="empty-state-desc">${escapeHtml(e.message)}</div>
           </div>
         </div>
@@ -880,7 +997,7 @@
             <span class="badge badge-primary">DYNAMIC SYNTHETIC BENCHMARK</span>
           </div>
 
-          <p style="font-size: 0.875rem; color: #475569; margin-bottom: 16px;">
+          <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 16px;">
             Every run generates fresh synthetic PII, valid Indian checksums, and unique canaries.
             Results measure Baseline (naive text-only regex) versus PrivacyLens multi-modal firewall.
           </p>
@@ -900,13 +1017,13 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px;">
           ${scenarios.map(sc => `
             <div class="saas-card" style="margin-bottom: 0;" id="card-${sc.id}">
-              <div style="font-size: 0.6875rem; font-weight: 700; color: #0284C7; text-transform: uppercase; margin-bottom: 4px;">
+              <div style="font-size: 0.6875rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; margin-bottom: 4px;">
                 ${escapeHtml(sc.category)}
               </div>
-              <div style="font-weight: 800; color: #0F172A; font-size: 1rem; margin-bottom: 6px;">
+              <div style="font-weight: 800; color: var(--text-main); font-size: 1rem; margin-bottom: 6px;">
                 ${escapeHtml(sc.name)}
               </div>
-              <div style="font-size: 0.78125rem; color: #64748B; margin-bottom: 14px; min-height: 48px; line-height: 1.4;">
+              <div style="font-size: 0.78125rem; color: var(--text-muted); margin-bottom: 14px; min-height: 48px; line-height: 1.4;">
                 ${escapeHtml(sc.description)}
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -941,7 +1058,7 @@
               </thead>
               <tbody id="test-lab-tbody">
                 <tr>
-                  <td colspan="7" style="text-align: center; color: #94A3B8; padding: 32px;">
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">
                     Click <strong>"Run All 5 Scenarios"</strong> or an individual scenario above to execute live comparative benchmarks.
                   </td>
                 </tr>
@@ -966,7 +1083,7 @@
       appContent.innerHTML = `
         <div class="saas-card">
           <div class="empty-state-box">
-            <div class="empty-state-title" style="color: #DC2626;">Error Loading Scenarios</div>
+            <div class="empty-state-title" style="color: var(--status-danger);">Error Loading Scenarios</div>
             <div class="empty-state-desc">${escapeHtml(e.message)}</div>
           </div>
         </div>
@@ -1028,8 +1145,8 @@
     tbody.innerHTML = results.map(r => `
       <tr>
         <td>
-          <div style="font-weight: 700; color: #0F172A;">${escapeHtml(r.scenario_name)}</div>
-          <div style="font-size: 0.6875rem; color: #64748B;">${escapeHtml(r.category)}</div>
+          <div style="font-weight: 700; color: var(--text-main);">${escapeHtml(r.scenario_name)}</div>
+          <div style="font-size: 0.6875rem; color: var(--text-muted);">${escapeHtml(r.category)}</div>
         </td>
         <td>
           <span class="badge badge-primary">${r.planted_canaries_count}</span>
@@ -1043,7 +1160,7 @@
           </span>
         </td>
         <td>
-          <span style="font-size: 0.75rem; font-weight: 700; color: ${r.privacylens.status === 'PROTECTED' ? '#059669' : '#DC2626'};">
+          <span style="font-size: 0.75rem; font-weight: 700; color: ${r.privacylens.status === 'PROTECTED' ? 'var(--status-success)' : 'var(--status-danger)'};">
             ${escapeHtml(r.privacylens.decision)}
           </span>
         </td>
@@ -1123,7 +1240,7 @@
               <tbody id="activity-tbody">
                 ${events.length === 0 ? `
                   <tr>
-                    <td colspan="4" style="text-align: center; color: #94A3B8; padding: 32px;">
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 32px;">
                       No events recorded yet.
                     </td>
                   </tr>
@@ -1153,7 +1270,7 @@
 
         tbody.innerHTML = filtered.length === 0 ? `
           <tr>
-            <td colspan="4" style="text-align: center; color: #94A3B8; padding: 24px;">
+            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">
               No matching activity events found.
             </td>
           </tr>
@@ -1167,7 +1284,7 @@
       appContent.innerHTML = `
         <div class="saas-card">
           <div class="empty-state-box">
-            <div class="empty-state-title" style="color: #DC2626;">Error Loading Logs</div>
+            <div class="empty-state-title" style="color: var(--status-danger);">Error Loading Logs</div>
             <div class="empty-state-desc">${escapeHtml(e.message)}</div>
           </div>
         </div>
@@ -1178,7 +1295,7 @@
   function renderEventRows(events) {
     return events.map(ev => `
       <tr>
-        <td style="font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap; color: #64748B;">
+        <td style="font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap; color: var(--text-muted);">
           ${escapeHtml(ev.time_display || ev.timestamp)}
         </td>
         <td>
@@ -1186,10 +1303,10 @@
             ${escapeHtml(ev.event_type)}
           </span>
         </td>
-        <td style="font-size: 0.8125rem; color: #0F172A; max-width: 500px;">
+        <td style="font-size: 0.8125rem; color: var(--text-main); max-width: 500px;">
           ${escapeHtml(ev.detail)}
         </td>
-        <td style="font-family: var(--font-mono); font-size: 0.75rem; color: #0284C7;">
+        <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-cyan);">
           ${escapeHtml(ev.scan_id || "system")}
         </td>
       </tr>
@@ -1244,7 +1361,7 @@
               </div>
             </div>
           </div>
-          <div style="font-size: 0.75rem; color: #64748B;">
+          <div style="font-size: 0.75rem; color: var(--text-muted);">
             Keys are stored in volatile runtime memory only. Never written to git or exposed to browser client scripts.
           </div>
         </div>
@@ -1369,7 +1486,7 @@
             <span class="badge badge-danger">DANGER ZONE</span>
           </div>
 
-          <p style="font-size: 0.875rem; color: #475569; margin-bottom: 14px;">
+          <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 14px;">
             PrivacyLens stores secrets strictly in volatile process RAM. Purging session history removes all recorded session summaries, live activity event logs, and token mappings from memory.
           </p>
 
@@ -1437,7 +1554,7 @@
       appContent.innerHTML = `
         <div class="saas-card">
           <div class="empty-state-box">
-            <div class="empty-state-title" style="color: #DC2626;">Error Loading Settings</div>
+            <div class="empty-state-title" style="color: var(--status-danger);">Error Loading Settings</div>
             <div class="empty-state-desc">${escapeHtml(e.message)}</div>
           </div>
         </div>
@@ -1458,12 +1575,43 @@
     }
   }
 
+
+  function initThemeToggle() {
+    const btn = document.getElementById("btn-theme-toggle");
+    const label = document.getElementById("theme-label");
+
+    function updateLabel() {
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (label) label.innerText = isDark ? "Light" : "Dark";
+    }
+
+    updateLabel();
+
+    if (btn) {
+      btn.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        if (next === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+        }
+        localStorage.setItem("privacylens_theme", next);
+        updateLabel();
+      });
+    }
+  }
+
   // =========================================================================
   // BOOTSTRAP APPLICATION
   // =========================================================================
 
-  document.addEventListener("DOMContentLoaded", () => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      initRouter();
+    });
+  } else {
     initRouter();
-  });
+  }
 
 })();

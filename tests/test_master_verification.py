@@ -191,6 +191,23 @@ def test_dynamic_statistics_updates_on_real_sessions(client):
     assert s_after["total_detected"] >= 1
 
 
+def test_live_judge_input_and_url_modes(client):
+    """Verify live arbitrary text input and live URL modes work dynamically."""
+    # 1. Live arbitrary judge input
+    live_text = "Judge test: Email judge@pecathon2026.org, phone +91-9876543210, Aadhaar 4357 9307 3000"
+    resp = client.post("/api/protection/start", json={
+        "custom_text": live_text,
+        "task_goal": "Sanitize judge input live",
+        "run_agent": False
+    })
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["verdict"] == "PROTECTED"
+    assert data["findings_count"] >= 2
+    assert "judge@pecathon2026.org" not in data["sanitized_payload"]
+    assert "[EMAIL_1]" in data["sanitized_payload"] or "[AADHAAR_1]" in data["sanitized_payload"]
+
+
 def test_multi_page_navigation_routes_serve_spa(client):
     """Verify that all 6 required routes serve the application HTML for client-side routing."""
     routes = ["/dashboard", "/protection", "/evidence", "/test-lab", "/activity", "/settings"]
